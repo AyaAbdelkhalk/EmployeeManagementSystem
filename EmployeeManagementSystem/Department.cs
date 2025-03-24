@@ -9,8 +9,8 @@ namespace EmployeeManagementSystem
     class Department
     {
         private string Name;
-        private string DepartmentHead;
-        private List<Employee> Employee = new List<Employee>();
+        private string DepartmentHead;  // i think it's better to use Employee type here
+        public List<Employee> Employee = new List<Employee>();
 
         public Department(string name, string departmentHead)
         {
