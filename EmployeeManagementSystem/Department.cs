@@ -26,16 +26,6 @@ namespace EmployeeManagementSystem
         {
             DepartmentHead = employee;
         }
-
-        public void AddEmployee(Employee employee)
-        {
-            Employee.Add(employee);
-        }
-
-        public void RemoveEmployee(Employee employee)
-        {
-            Employee.Remove(employee);
-        }
         public void UpdateDepartmentHead(Employee employee)
         {
             DepartmentHead = employee;

@@ -25,9 +25,9 @@ namespace EmployeeManagementSystem
             Age = age;
             Salary = salary;
             Department = department; 
-            Department.AddEmployee(this);
+            Department.AddEmployeeToDepartment(this);
             Terminate = false;
-            Rate = 0;
+            Rate = Rate.Unrated;
             JopTitle = JopTitles.Junior;
             EmploymentDate = DateOnly.FromDateTime(DateTime.Now);
         }
@@ -43,9 +43,9 @@ namespace EmployeeManagementSystem
         {
             if (department != null && Terminate == false)
             {
-                Department.RemoveEmployee(this);
+                Department.RemoveEmployeeFromDepartment(this);
                 Department = department;
-                Department.AddEmployee(this);
+                Department.AddEmployeeToDepartment(this);
             }
         }
         public void TerminateEmployee()
@@ -98,6 +98,32 @@ namespace EmployeeManagementSystem
         {
             return Name;
         }
+        //public void Prmotion()
+        //{
+        //   switch (Rate)
+        //    {
+        //        case Rate.Unrated:
+        //            //logic
+        //            break;
+        //        case Rate.Unacceptable:
+        //            //logic
+        //            break;
+        //        case Rate.NeedsImprovement:
+        //            //logic
+        //            break;
+        //        case Rate.MeetsExpectations:
+        //            //logic
+        //            break;
+        //        case Rate.ExceedsExpectations:
+        //            //logic
+        //            break;
+        //        case Rate.Outstanding:
+        //            //logic
+        //            break;
+        //    }
+                
+
+        //}
 
     }
 }
