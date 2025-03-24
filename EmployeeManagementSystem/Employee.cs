@@ -13,10 +13,10 @@ namespace EmployeeManagementSystem
         private int Age;
         private decimal Salary;
         private Department Department;
-        private DateOnly EmploymentDate; // what type we need -> DateOnly is fine we don't care about employement time
-        private double Rate;
+        private DateOnly EmploymentDate; 
+        private Rate Rate;
         private bool Terminate;
-        private string JopTitle;
+        private JopTitles JopTitle;
 
         public Employee(string id, string name, int age, decimal salary, Department department)
         {
@@ -24,23 +24,80 @@ namespace EmployeeManagementSystem
             Name = name;
             Age = age;
             Salary = salary;
-            Department = department; // we need to add the employee to the department list
+            Department = department; 
+            Department.AddEmployee(this);
             Terminate = false;
-            // In known companies, the employee starts with a rate of 0 and then after the first performance review, the rate will be updated
-            // we can use an enum for the rate with the following values
-            // 5– Outstanding, 4– Exceeds Expectations, 3- Meets Expectations, 2- Needs Improvement, 1- Unacceptable , 0- Unrated
-            Rate = 0;//اول ما هيبدل خيبدا ب صفر؟؟؟
-            JopTitle = "joiner"; // here we could use enum for the job title too
-            EmploymentDate = new DateOnly();
+            Rate = 0;
+            JopTitle = JopTitles.Junior;
+            EmploymentDate = DateOnly.FromDateTime(DateTime.Now);
+        }
+        public void UpdateJopTitle(JopTitles jopTitle)
+        {
+            JopTitle = jopTitle;
+        }
+        public void SetRate(Rate rate)
+        {
+            Rate = rate;
         }
         public void TransferDepartment(Department department)
         {
             if (department != null && Terminate == false)
             {
-                // we should remove the employee from the old department
+                Department.RemoveEmployee(this);
                 Department = department;
-                // we should add the employee to the new department
+                Department.AddEmployee(this);
             }
         }
+        public void TerminateEmployee()
+        {
+            if (Terminate == false)
+            {
+                Terminate = true;
+            }
+        }
+        public bool IsTerminated()
+        {
+            return Terminate;
+        }
+        public List<Employee> DisplayCurrentEmployees()
+        {
+            List<Employee> employees = new List<Employee>();
+            foreach (Employee employee in Department.Employee)
+            {
+                if (employee.IsTerminated() == false)
+                {
+                    employees.Add(employee);
+                }
+            }
+            return employees;
+        }
+        public List<Employee> DisplayPastEmployees()
+        {
+            List<Employee> employees = new List<Employee>();
+            foreach (Employee employee in Department.Employee)
+            {
+                if (employee.IsTerminated() == true)
+                {
+                    employees.Add(employee);
+                }
+            }
+            return employees;
+        }
+        public void DisplayEmployeeInfo()
+        {
+            Console.WriteLine("ID: " + ID);
+            Console.WriteLine("Name: " + Name);
+            Console.WriteLine("Age: " + Age);
+            Console.WriteLine("Salary: " + Salary);
+            Console.WriteLine("Department: " + Department.GetDepartmentName());
+            Console.WriteLine("Employment Date: " + EmploymentDate);
+            Console.WriteLine("Rate: " + Rate);
+            Console.WriteLine("Jop Title: " + JopTitle);
+        }
+        public string GetEmployeeName()
+        {
+            return Name;
+        }
+
     }
 }
