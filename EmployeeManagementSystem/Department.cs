@@ -10,7 +10,7 @@ namespace EmployeeManagementSystem
     {
         private string Name;
         private Employee? DepartmentHead;
-        public List<Employee> Employee = new List<Employee>();
+        public List<Employee> Employees = new List<Employee>();
 
         public Department(string name, Employee employee)
         {
@@ -22,26 +22,31 @@ namespace EmployeeManagementSystem
             Name = name;
             DepartmentHead = null;
         }
+
         public void setDepartmentHead(Employee employee)
         {
             DepartmentHead = employee;
         }
+
         public void UpdateDepartmentHead(Employee employee)
         {
             DepartmentHead = employee;
         }
+
         public void AddEmployeeToDepartment(Employee employee)
         {
-            Employee.Add(employee);
+            Employees.Add(employee);
         }
+
         public void RemoveEmployeeFromDepartment(Employee employee)
         {
-            Employee.Remove(employee);
+            Employees.Remove(employee);
         }
+
         public List<Employee> DisplayDepartmentEmployees()
         {
             List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Employee)
+            foreach (Employee employee in Employees)
             {
                 if (employee.IsTerminated() == false)
                 {

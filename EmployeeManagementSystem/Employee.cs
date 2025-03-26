@@ -8,7 +8,8 @@ namespace EmployeeManagementSystem
 {
     class Employee
     {
-        private string ID;
+        private static int EmployeeCounter = 1;
+        private int ID;
         private string Name;
         private int Age;
         private decimal Salary;
@@ -18,9 +19,9 @@ namespace EmployeeManagementSystem
         private bool Terminate;
         private JopTitles JopTitle;
 
-        public Employee(string id, string name, int age, decimal salary, Department department)
+        public Employee(string name, int age, decimal salary, Department department)
         {
-            ID = id;
+            ID = EmployeeCounter++; 
             Name = name;
             Age = age;
             Salary = salary;
@@ -62,7 +63,7 @@ namespace EmployeeManagementSystem
         public List<Employee> DisplayCurrentEmployees()
         {
             List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Department.Employee)
+            foreach (Employee employee in Department.Employees)
             {
                 if (employee.IsTerminated() == false)
                 {
@@ -74,7 +75,7 @@ namespace EmployeeManagementSystem
         public List<Employee> DisplayPastEmployees()
         {
             List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Department.Employee)
+            foreach (Employee employee in Department.Employees)
             {
                 if (employee.IsTerminated() == true)
                 {
@@ -83,20 +84,19 @@ namespace EmployeeManagementSystem
             }
             return employees;
         }
+
         public void DisplayEmployeeInfo()
         {
-            Console.WriteLine("ID: " + ID);
-            Console.WriteLine("Name: " + Name);
-            Console.WriteLine("Age: " + Age);
-            Console.WriteLine("Salary: " + Salary);
-            Console.WriteLine("Department: " + Department.GetDepartmentName());
-            Console.WriteLine("Employment Date: " + EmploymentDate);
-            Console.WriteLine("Rate: " + Rate);
-            Console.WriteLine("Jop Title: " + JopTitle);
+            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {JopTitle.ToString().PadRight(12)}");
         }
         public string GetEmployeeName()
         {
             return Name;
+        }
+
+        public int GetEmployeeId()
+        {
+            return ID;
         }
         //public void Prmotion()
         //{
@@ -121,7 +121,7 @@ namespace EmployeeManagementSystem
         //            //logic
         //            break;
         //    }
-                
+
 
         //}
 
