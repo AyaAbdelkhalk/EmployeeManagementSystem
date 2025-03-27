@@ -32,13 +32,20 @@ namespace EmployeeManagementSystem
             JopTitle = JopTitles.Junior;
             EmploymentDate = DateOnly.FromDateTime(DateTime.Now);
         }
-        public void UpdateJopTitle(JopTitles jopTitle)
-        {
-            JopTitle = jopTitle;
-        }
+        //public void UpdateJopTitle(JopTitles jopTitle)
+        //{
+        //    JopTitle = jopTitle;
+        //}
         public void SetRate(Rate rate)
         {
-            Rate = rate;
+            if (rate == Rate.Unrated)
+            {
+                Console.WriteLine("Invalid Rate");
+            }
+            else
+            {
+                Rate = rate;
+            }
         }
         public void TransferDepartment(Department department)
         {
@@ -98,32 +105,33 @@ namespace EmployeeManagementSystem
         {
             return ID;
         }
-        //public void Prmotion()
-        //{
-        //   switch (Rate)
-        //    {
-        //        case Rate.Unrated:
-        //            //logic
-        //            break;
-        //        case Rate.Unacceptable:
-        //            //logic
-        //            break;
-        //        case Rate.NeedsImprovement:
-        //            //logic
-        //            break;
-        //        case Rate.MeetsExpectations:
-        //            //logic
-        //            break;
-        //        case Rate.ExceedsExpectations:
-        //            //logic
-        //            break;
-        //        case Rate.Outstanding:
-        //            //logic
-        //            break;
-        //    }
+        public void GivePromotion(JopTitles jopTitle)
+        {
+            switch (jopTitle)
+            {
+                    case JopTitles.Junior:
+                        Salary += Salary * .15m;
+                        JopTitle = jopTitle;
+                        break;
+                    case JopTitles.Senior:
+                        Salary += Salary * .18m;
+                        JopTitle = jopTitle;
+                        break;
+                    case JopTitles.TeamLeader:
+                        Salary += Salary * .20m;
+                        JopTitle = jopTitle;
+                        break;
+                    case JopTitles.Manager:
+                        Salary += Salary * .25m;
+                        JopTitle = jopTitle;
+                        break;
+                    case JopTitles.CEO:
+                        Salary += Salary * .30m;
+                        JopTitle = jopTitle;
+                        break;
 
-
-        //}
+            }
+        }
 
     }
 }
