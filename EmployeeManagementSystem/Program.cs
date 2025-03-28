@@ -20,6 +20,11 @@ namespace EmployeeManagementSystem
             Employee employee2 = new Employee("Ali", 30, 7000, JopTitles.Mid, HRDepartement);
             Employee employee3 = new Employee("Omar", 35, 9000, JopTitles.Junior, ITDepartement);
             Employee employee4 = new Employee("Mohamed Anwar", 40, 10000, JopTitles.Senior, HRDepartement);
+            //employee4.SetRate(Rate.MeetsExpectations);////////////////for Check
+            //employee4.SetJopTitle(JopTitles.Junior);
+            //employee4.DisplayEmployeeInfo();
+            //PerformenceReview.GivePromotion(employee4);
+            //employee4.DisplayEmployeeInfo();
             ITDepartement.setDepartmentHead(employee3);
             HRDepartement.setDepartmentHead(employee4);
             List<Employee> employees = ITDepartement.DisplayDepartmentEmployees();
