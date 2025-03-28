@@ -8,11 +8,12 @@ namespace EmployeeManagementSystem
 {
     class PerformenceReview
     {
-        public void GivePromotion(Employee employee)
+        public static void GivePromotion(Employee employee)
         {
-            // employee.Salary += employee.Salary * .15m;
-            // Icrement the JopTitle by 1
-            //JopTitle = (int)JopTitle;
+            decimal newSalary = employee.GetSalary()+(employee.GetSalary()) * .15m;
+            employee.SetSalary(newSalary);
+            JopTitles newJopTitle= (JopTitles)((int)employee.GetJopTitle()+1);
+            employee.SetJopTitle(newJopTitle);
 
         }
     }
