@@ -114,6 +114,22 @@ namespace EmployeeManagementSystem
             return Rate;
         }
         
+        public decimal GetSalary()
+        {
+            return Salary;
+        }
+        public void SetSalary(decimal salary)
+        {
+            Salary = salary;
+        }
+        public JopTitles GetJopTitle()
+        {
+            return JopTitle ;
+        }
+        public void SetJopTitle(JopTitles jopTitle)
+        {
+            JopTitle=jopTitle;
+        }
 
     }
 }
