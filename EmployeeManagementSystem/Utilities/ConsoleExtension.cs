@@ -24,11 +24,12 @@ namespace EmployeeManagementSystem.Utilities
         public static void WriteError(List<string> errors)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("These Validation Errors Occurred :");
+            Console.WriteLine("\nThese Validation Errors Occurred :");
             foreach (string error in errors)
             {
                 Console.WriteLine("    - " + error);
             }
+            Console.WriteLine();
             Console.ResetColor();
         }
 
