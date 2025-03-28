@@ -96,8 +96,13 @@ namespace EmployeeManagementSystem
 
         public void DisplayEmployeeInfo()
         {
-            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(Rate > Rate.MeetsExpectations ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
+            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(IsEligible() ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
         }
+        //public void DisplayEmployeeInfo()
+        //{
+        //    Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(Rate > Rate.MeetsExpectations ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
+        //}
+
 
 
         public string GetEmployeeName()
@@ -129,6 +134,18 @@ namespace EmployeeManagementSystem
         public void SetJopTitle(JopTitles jopTitle)
         {
             JopTitle=jopTitle;
+        }
+        public bool IsEligible()
+        {
+            //if(Rate!=Rate.Unrated||Rate!=Rate.Unacceptable|| Rate != Rate.NeedsImprovement)
+            if(Rate>Rate.NeedsImprovement)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }
