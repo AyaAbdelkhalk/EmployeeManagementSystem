@@ -119,17 +119,17 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void GenerateSalaryDistributionReport()
         {
-            Console.WriteLine("Not Implemented Yet... !");
+            company.GenerateSalaryDistributionReport();
         }
 
         public static void GenerateTopPerformersReport()
         {
-            Console.WriteLine("Not Implemented Yet... !");
+            company.GenerateTopPerformersReport();
         }
 
         public static void GenerateEmployeesPerDepartmentReport()
         {
-            Console.WriteLine("Not Implemented Yet... !");
+            company.GenerateEmployeesPerDepartmentReport();
         }
 
     }

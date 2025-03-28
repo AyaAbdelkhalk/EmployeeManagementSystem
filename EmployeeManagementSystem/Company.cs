@@ -54,7 +54,6 @@ namespace EmployeeManagementSystem
             foreach (var department in DepartmentList)
             {
                 Console.WriteLine($"\nDepartment: {department.GetDepartmentName()}");
-                Console.WriteLine($"Head: {department.GetDepartmentHead()?.GetEmployeeName() ?? "No Head"}");
                 Console.WriteLine("Employees:");
 
                 var activeEmployees = department.DisplayDepartmentEmployees();
@@ -64,18 +63,24 @@ namespace EmployeeManagementSystem
                     continue;
                 }
 
-                Console.WriteLine("ID   Name               Age  Salary    Title          Rate");
+                foreach (var employee in activeEmployees)
+                {
+                    Console.WriteLine( $"{employee.GetEmployeeName(),-20}");
+                }
+            }
+        }
+
+        public void GenerateSalaryDistributionReport()
+        {
+            Console.WriteLine("\n=== Salary Distrubution Report ===");
+            Console.WriteLine("ID   Name               Age  Salary    Title       Eligebel   Rate");
+            foreach (var department in DepartmentList)
+            {
+                var activeEmployees = department.DisplayDepartmentEmployees();
 
                 foreach (var employee in activeEmployees)
                 {
-                    Console.WriteLine(
-                        $"{employee.GetEmployeeId(),-5}" +
-                        $"{employee.GetEmployeeName(),-20}" +
-                        $"{employee.Age,-5}" +
-                        $"{employee.Salary,-10}" +
-                        $"{employee.JopTitle,-15}" +
-                        $"{employee.Rate}"
-                    );
+                    employee.DisplayEmployeeInfo();
                 }
             }
         }
@@ -84,11 +89,11 @@ namespace EmployeeManagementSystem
         {
             Console.WriteLine("\n=== Top Performers Report ===");
 
-            // Get all active employees from all departments
+            //Get all active employees from all departments
             var allEmployees = DepartmentList
                 .SelectMany(d => d.DisplayDepartmentEmployees())
-                .Where(e => e.Rate != Rate.Unrated)
-                .OrderByDescending(e => e.Rate)
+                .Where(e => e.GetEmployeeRate() != Rate.Unrated)
+                .OrderByDescending(e => e.GetEmployeeRate())
                 .Take(count)
                 .ToList();
 
@@ -97,47 +102,41 @@ namespace EmployeeManagementSystem
                 Console.WriteLine("No rated employees found");
                 return;
             }
-
+            // Change This
             Console.WriteLine($"{"ID",-5}{"Name",-20}{"Department",-15}{"Rating",-20}{"Salary",-10}");
 
             foreach (var employee in allEmployees)
             {
-                Console.WriteLine(
-                    $"{employee.GetEmployeeId(),-5} " +
-                    $"{employee.GetEmployeeName(),-20} " +
-                    $"{employee.Department.GetDepartmentName(),-15} " +
-                    $"{employee.Rate.ToString(),-20} " +
-                    $"{employee.Salary.ToString(),-10}"
-                );
+                employee.DisplayEmployeeInfo();
             }
         }
 
-        public bool DepartmentExists(string departmentName)
-        {
-            foreach (var department in DepartmentList)
-            {
-                if (string.Equals(department.GetDepartmentName(), departmentName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //public bool DepartmentExists(string departmentName)
+        //{
+        //    foreach (var department in DepartmentList)
+        //    {
+        //        if (string.Equals(department.GetDepartmentName(), departmentName, StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-        public bool EmployeeExists(int employeeId)
-        {
-            foreach (var department in DepartmentList)
-            {
-                foreach (var employee in department.Employees)
-                {
-                    if (employee.GetEmployeeId() == employeeId)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        //public bool EmployeeExists(int employeeId)
+        //{
+        //    foreach (var department in DepartmentList)
+        //    {
+        //        foreach (var employee in department.Employees)
+        //        {
+        //            if (employee.GetEmployeeId() == employeeId)
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
 
     }
 }

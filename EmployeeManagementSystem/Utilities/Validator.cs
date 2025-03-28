@@ -8,6 +8,12 @@ namespace EmployeeManagementSystem.Utilities
 {
     internal static class Validator
     {
+        /// <summary>
+        ///  salary cant be negative
+        ///  EMplyee Name must be only chars
+        ///  accept departemt wiyhout haed
+        /// </summary>
+        /// 
         public static Company Company = new Company();
 
         public static bool ValidateDepartment(string name, string HeadId, out Employee employee)
@@ -98,7 +104,8 @@ namespace EmployeeManagementSystem.Utilities
             }
             else
             {
-                employee = new Employee(name, ageInt, salaryDecimal, department!);
+                // Recieve Job title from user
+                employee = new Employee(name, ageInt, salaryDecimal,JopTitles.Junior, department!);
                 return true;
             }
         }

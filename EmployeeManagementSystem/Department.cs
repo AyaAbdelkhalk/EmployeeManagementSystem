@@ -28,10 +28,6 @@ namespace EmployeeManagementSystem
             DepartmentHead = employee;
         }
 
-        public void UpdateDepartmentHead(Employee employee)
-        {
-            DepartmentHead = employee;
-        }
 
         public void AddEmployeeToDepartment(Employee employee)
         {
@@ -59,6 +55,7 @@ namespace EmployeeManagementSystem
         {
             return Name;
         }
+
         public Employee GetDepartmentHead()
         {
             return DepartmentHead;

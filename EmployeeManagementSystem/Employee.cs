@@ -14,28 +14,30 @@ namespace EmployeeManagementSystem
         private int Age;
         private decimal Salary;
         private Department Department;
-        private DateOnly EmploymentDate; 
+        private DateOnly EmploymentDate;
         private Rate Rate;
         private bool Terminate;
         private JopTitles JopTitle;
 
-        public Employee(string name, int age, decimal salary, Department department)
+        public Employee(string name, int age, decimal salary, JopTitles jopTitles, Department department)
         {
-            ID = EmployeeCounter++; 
+            ID = EmployeeCounter++;
             Name = name;
             Age = age;
             Salary = salary;
-            Department = department; 
+            Department = department;
             Department.AddEmployeeToDepartment(this);
             Terminate = false;
             Rate = Rate.Unrated;
-            JopTitle = JopTitles.Junior;
+            JopTitle = jopTitles;
             EmploymentDate = DateOnly.FromDateTime(DateTime.Now);
         }
-        //public void UpdateJopTitle(JopTitles jopTitle)
-        //{
-        //    JopTitle = jopTitle;
-        //}
+
+        public void UpdateJopTitle(JopTitles jopTitle)
+        {
+            JopTitle = jopTitle;
+        }
+
         public void SetRate(Rate rate)
         {
             if (rate == Rate.Unrated)
@@ -94,8 +96,10 @@ namespace EmployeeManagementSystem
 
         public void DisplayEmployeeInfo()
         {
-            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {JopTitle.ToString().PadRight(12)}");
+            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(Rate > Rate.MeetsExpectations ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
         }
+
+
         public string GetEmployeeName()
         {
             return Name;
@@ -105,33 +109,11 @@ namespace EmployeeManagementSystem
         {
             return ID;
         }
-        public void GivePromotion(JopTitles jopTitle)
+        public Rate GetEmployeeRate()
         {
-            switch (jopTitle)
-            {
-                    case JopTitles.Junior:
-                        Salary += Salary * .15m;
-                        JopTitle = jopTitle;
-                        break;
-                    case JopTitles.Senior:
-                        Salary += Salary * .18m;
-                        JopTitle = jopTitle;
-                        break;
-                    case JopTitles.TeamLeader:
-                        Salary += Salary * .20m;
-                        JopTitle = jopTitle;
-                        break;
-                    case JopTitles.Manager:
-                        Salary += Salary * .25m;
-                        JopTitle = jopTitle;
-                        break;
-                    case JopTitles.CEO:
-                        Salary += Salary * .30m;
-                        JopTitle = jopTitle;
-                        break;
-
-            }
+            return Rate;
         }
+        
 
     }
 }
