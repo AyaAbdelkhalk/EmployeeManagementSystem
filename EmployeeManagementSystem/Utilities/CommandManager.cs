@@ -40,16 +40,18 @@ namespace EmployeeManagementSystem.Utilities
             do
             {
                 Console.WriteLine("Creating a New Employee... \n");
-                Console.WriteLine("Choose Username");
+                Console.WriteLine("Choose Employee Name");
                 string userName = Console.ReadLine()!;
                 Console.WriteLine("Choose Age");
                 string age = Console.ReadLine()!;
                 Console.WriteLine("Choose Salary");
                 string salary = Console.ReadLine()!;
+                Console.WriteLine("Choose Job Title (Fresher = 0, Junior = 1, Mid = 2, Senior = 3, Principal = 4 )");
+                string jobTitle = Console.ReadLine()!;
                 Console.WriteLine("Choose Departement Name");
                 string departmentName = Console.ReadLine()!;
 
-                isValid = Validator.ValidateEmployee(userName, age, salary, departmentName, out Employee employee);
+                isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle ,departmentName, out Employee employee);
                 if (isValid)
                 {
                     ConsoleExtension.WriteSuccess("Employee Added Successfully, Returning to the Main Menu ....");
@@ -90,14 +92,17 @@ namespace EmployeeManagementSystem.Utilities
                 string departmentName = Console.ReadLine()!;
                 Console.WriteLine("Choose Department Head ID");
                 string departmentHeadID = Console.ReadLine()!;
-                isValid = Validator.ValidateDepartment(departmentName, departmentHeadID, out Employee employee);
+                isValid = Validator.ValidateDepartment(departmentName, departmentHeadID, out Employee head);
 
                 if (isValid)
                 {
-                    Department department = new Department(departmentName , employee);
+                    Department department =  new Department(departmentName , head);
                     company.AddDepartment(department);
-                    ConsoleExtension.WriteSuccess("Department Added Successfully, Returning to the Main Menu ....");
-                    Thread.Sleep(1500);
+                    if(head is null)
+                        ConsoleExtension.WriteWarning("Warning : Department Has Been Created With no Head");
+                    else
+                        ConsoleExtension.WriteSuccess("Department Added Successfully, Returning to the Main Menu ....");
+                    Thread.Sleep(1800);
                     Console.Clear();
                 }
             }
@@ -112,7 +117,7 @@ namespace EmployeeManagementSystem.Utilities
             Console.WriteLine(new string('─', 35));
             foreach (Department department in company.GetDepartmentList())
             {
-                Console.WriteLine($"{department.GetDepartmentName()}\t\t {department.GetDepartmentHead().GetEmployeeName()}");
+                Console.WriteLine($"{department.GetDepartmentName()}\t\t {department.GetDepartmentHeadName()}");
                 Console.WriteLine(new string('─', 35));
             }
         }

@@ -60,5 +60,10 @@ namespace EmployeeManagementSystem
         {
             return DepartmentHead;
         }
+
+        public string GetDepartmentHeadName()
+        {
+            return DepartmentHead is null ? "No Head" : DepartmentHead.GetEmployeeName();
+        }
     }
 }
