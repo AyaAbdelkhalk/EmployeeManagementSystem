@@ -129,7 +129,7 @@ namespace EmployeeManagementSystem.Utilities
             table.AddColumn("Department");
             table.AddColumn("Employment Date");
             table.AddColumn("Rate");
-            table.AddColumns("Eligibility");
+            table.AddColumns("Eligible");
             table.AddColumn("Job Title");
 
 
@@ -143,12 +143,12 @@ namespace EmployeeManagementSystem.Utilities
                             table.AddRow(
                                 employee.GetEmployeeId().ToString(),
                                 employee.GetEmployeeName(),
-                                "25",
-                                "10000",
+                                employee.GetAge().ToString(),
+                                employee.GetSalary().ToString("N0"),
                                 department.GetDepartmentName(),
-                                employee.GetSalary().ToString(),
-                                "5",
-                                "Eligible",
+                                employee.GetEmployementDate().ToString(),
+                                employee.GetEmployeeRate().ToString(),
+                                employee.IsEligible().ToString(),
                                 employee.GetJopTitle().ToString());
 
                             ctx.Refresh();
@@ -163,7 +163,61 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void PromoteEmployee()
         {
-            Console.WriteLine("Not Implemented Yet... !");
+            AnsiConsole.MarkupLine("[bold]Promoting an Employee...[/]");
+
+            AnsiConsole.MarkupLine("\nEnter Employee [green]ID[/]");
+            string id = Console.ReadLine()!;
+
+            if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+            }
+            else
+            {
+                Employee? employee = company.GetDepartmentList()
+                    .SelectMany(x => x.Employees)
+                    .FirstOrDefault(x => x.GetEmployeeId() == idInt);
+
+                if (employee is null)
+                {
+                    ConsoleExtension.WriteError("\nEmployee Not Found");
+                }
+                else
+                {
+                    if (!employee.IsEligible())
+                    {
+                        ConsoleExtension.WriteError("\nEmployee is Not Eligible for Promotion");
+                        return;
+                    }
+
+
+                    var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
+                    empBefore.AddColumn(employee.GetEmployeeId().ToString());
+                    empBefore.AddColumn(employee.GetEmployeeName());
+                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetSalary().ToString("N0")}[/]")));
+                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetJopTitle().ToString()}[/]")));
+                    empBefore.Columns[0].Width = 5;
+                    empBefore.Columns[1].Width = empBefore.Columns[2].Width = empBefore.Columns[3].Width = 10;
+                    AnsiConsole.Write(empBefore);
+
+                    PerformenceReview.GivePromotion(employee);
+                    AnsiConsole.Write(new Text("↓").Centered());
+
+                    var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
+                    empAfter.AddColumn(employee.GetEmployeeId().ToString());
+                    empAfter.AddColumn(employee.GetEmployeeName());
+                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetSalary().ToString("N0")}[/]")));
+                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetJopTitle().ToString()}[/]")));
+                    empAfter.Columns[0].Width = 5;
+                    empAfter.Columns[1].Width = empAfter.Columns[2].Width = empAfter.Columns[3].Width = 10;
+                    AnsiConsole.Write(empAfter);
+
+
+                    ConsoleExtension.WriteSuccess("\nEmployee Promoted Successfully");
+
+                }
+
+            }
         }
 
         public static void AddDepartment(Company company)

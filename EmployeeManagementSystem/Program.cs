@@ -30,6 +30,13 @@ namespace EmployeeManagementSystem
             ITDepartement.setDepartmentHead(employee3);
             HRDepartement.setDepartmentHead(employee4);
 
+
+            employee1.SetRate(Rate.MeetsExpectations);
+            employee2.SetRate(Rate.ExceedsExpectations);
+            employee3.SetRate(Rate.Unacceptable);
+            employee4.SetRate(Rate.Outstanding);
+
+
             CommandManager.DisplayLogo();
 
             while (true)

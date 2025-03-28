@@ -123,6 +123,11 @@ namespace EmployeeManagementSystem
         {
             return Salary;
         }
+
+        public DateOnly GetEmployementDate()
+        {
+            return EmploymentDate;
+        }
         public void SetSalary(decimal salary)
         {
             Salary = salary;
@@ -130,6 +135,10 @@ namespace EmployeeManagementSystem
         public JopTitles GetJopTitle()
         {
             return JopTitle ;
+        }
+        public int GetAge()
+        {
+            return Age;
         }
         public void SetJopTitle(JopTitles jopTitle)
         {
