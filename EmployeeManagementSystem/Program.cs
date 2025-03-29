@@ -1,4 +1,5 @@
 ﻿using EmployeeManagementSystem.Utilities;
+using Spectre.Console;
 
 namespace EmployeeManagementSystem
 {
@@ -10,66 +11,80 @@ namespace EmployeeManagementSystem
             Validator.Company = company;
             CommandManager.company = company;
 
-            //Department ITDepartement = new Department("IT");
-            //company.AddDepartment(ITDepartement);
-            //Department HRDepartement = new Department("HR");
-            //company.AddDepartment(HRDepartement);
-            //Employee employee1 = new Employee("Ahmed", 25, 5000, JopTitles.Mid, ITDepartement);
+
+            Department ITDepartement = new Department("IT");
+            Department HRDepartement = new Department("HR");
+            Department FinanceDepartement = new Department("Finance");
+            Department MarketingDepartement = new Department("Marketing");
+            company.AddDepartment(ITDepartement);
+            company.AddDepartment(HRDepartement);
+            company.AddDepartment(FinanceDepartement);
+            company.AddDepartment(MarketingDepartement);
+
+            Employee employee1 = new Employee("Ahmed Fahmy", 25, 5000, JopTitles.Mid, ITDepartement);
+            Employee employee2 = new Employee("Ali Saad", 30, 7000, JopTitles.Mid, HRDepartement);
+            Employee employee3 = new Employee("Omar Abdelbaset", 35, 9000, JopTitles.Junior, ITDepartement);
+            Employee employee4 = new Employee("Momen Ahmed", 40, 10000, JopTitles.Senior, HRDepartement);
+            Employee employee5 = new Employee("Ashraf Khaled", 40, 10000, JopTitles.Principal, HRDepartement);
+            Employee employee6 = new Employee("Taha Ragab", 40, 10000, JopTitles.Fresher, HRDepartement);
+            Employee employee7 = new Employee("Fouad Magdy", 40, 10000, JopTitles.Senior, HRDepartement);
+            ITDepartement.setDepartmentHead(employee3);
+            HRDepartement.setDepartmentHead(employee4);
 
 
-            //Employee employee2 = new Employee("Ali", 30, 7000, JopTitles.Mid, HRDepartement);
-            //Employee employee3 = new Employee("Omar", 35, 9000, JopTitles.Junior, ITDepartement);
-            //Employee employee4 = new Employee("Mohamed Anwar", 40, 10000, JopTitles.Senior, HRDepartement);
-            //ITDepartement.setDepartmentHead(employee3);
-            //HRDepartement.setDepartmentHead(employee4);
-            //List<Employee> employees = ITDepartement.DisplayDepartmentEmployees();
+            employee1.SetRate(Rate.MeetsExpectations);
+            employee2.SetRate(Rate.ExceedsExpectations);
+            employee3.SetRate(Rate.Unacceptable);
+            employee4.SetRate(Rate.Outstanding);
 
+
+            CommandManager.DisplayLogo();
 
             while (true)
             {
-                CommandManager.DisplayMainMenu();
-                char keyPressed = Console.ReadKey(intercept: true).KeyChar;
+                var selection = CommandManager.DisplayMainMenu();
 
-                switch (keyPressed)
+                switch (selection)
                 {
-                    case '1':
+                    case "Add an Employee":
                         CommandManager.AddEmployee(company);
                         break;
-                    case '2':
+                    case "Display All Employees":
                         CommandManager.DisplayEmployees(company);
                         break;
-                    case '3':
+                    case "Promote an Employee":
                         CommandManager.PromoteEmployee();
                         break;
-                    case '4':
+                    case "Add a Department":
                         CommandManager.AddDepartment(company);
                         break;
-                    case '5':
+                    case "Display All Departments":
                         CommandManager.DisplayDepartments(company);
                         break;
-                    case '6':
-                        CommandManager.DisplayReportMenu();
-                        char reportType = Console.ReadKey(intercept: true).KeyChar;
+                    case "Generate Reports":
+                        
+                        string reportType = CommandManager.DisplayReportMenu();
                         switch (reportType)
                         {
-                            case '1':
+                            case "1":
                                 CommandManager.GenerateEmployeesPerDepartmentReport();
                                 break;
-                            case '2':
+                            case "2":
                                 CommandManager.GenerateTopPerformersReport();
                                 break;
-                            case '3':
+                            case "3":
                                 CommandManager.GenerateSalaryDistributionReport();
                                 break;
-                            case '4':
+                            case "4":
                                 Console.Clear();
+                                CommandManager.DisplayLogo();
                                 break;
                             default:
                                 Console.WriteLine("Invalid Command");
                                 break;
                         }
                         break;
-                    case '7':
+                    case "Exit":
                         return;
                     default:
                         Console.WriteLine("Invalid Command");

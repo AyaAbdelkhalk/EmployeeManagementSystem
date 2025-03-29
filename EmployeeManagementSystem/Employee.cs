@@ -97,6 +97,11 @@ namespace EmployeeManagementSystem
                 $"\t {Department.Name}\t\t {EmploymentDate}\t {Rate}\t    {(Rate > Rate.MeetsExpectations ?
                 "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
         }
+        //public void DisplayEmployeeInfo()
+        //{
+        //    Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(Rate > Rate.MeetsExpectations ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
+        //}
+
 
 
 
@@ -119,6 +124,11 @@ namespace EmployeeManagementSystem
         {
             return Salary;
         }
+
+        public DateOnly GetEmployementDate()
+        {
+            return EmploymentDate;
+        }
         public void SetSalary(decimal salary)
         {
             Salary = salary;
@@ -128,8 +138,25 @@ namespace EmployeeManagementSystem
             return JopTitle ;
         }
         public void SetJobTitle(JopTitles jopTitle)
+        public int GetAge()
+        {
+            return Age;
+        }
+        public void SetJopTitle(JopTitles jopTitle)
         {
             JopTitle=jopTitle;
+        }
+        public bool IsEligible()
+        {
+            //if(Rate!=Rate.Unrated||Rate!=Rate.Unacceptable|| Rate != Rate.NeedsImprovement)
+            if(Rate>Rate.NeedsImprovement)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

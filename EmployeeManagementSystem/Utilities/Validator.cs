@@ -17,8 +17,12 @@ namespace EmployeeManagementSystem.Utilities
             if (string.IsNullOrEmpty(name))
                 errors.Add("Department Name is Required");
 
+            if(Company.GetDepartmentList().Any(x => x.GetDepartmentName() == name))
+            {
+                errors.Add("Department with this name already exists");
+            }
 
-            if(!int.TryParse(HeadId, out int Id) && !string.IsNullOrEmpty(HeadId))
+            if (!int.TryParse(HeadId, out int Id) && !string.IsNullOrEmpty(HeadId))
             {
                 errors.Add("Department Head ID Must be a Number");
             }

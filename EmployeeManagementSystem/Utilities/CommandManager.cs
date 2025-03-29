@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spectre.Console;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
@@ -14,26 +15,45 @@ namespace EmployeeManagementSystem.Utilities
         public static Company company = new Company();
         private readonly static EMSContext _context = new EMSContext();
 
-        public static void DisplayMainMenu()
+        public static void DisplayLogo()
         {
-            Console.WriteLine("Employee Management System (EMS) \n");
-            Console.WriteLine("1- Add an Employee");
-            Console.WriteLine("2- Display All Employees");
-            Console.WriteLine("3- Promote an Employee");
-            Console.WriteLine("4- Add a Department");
-            Console.WriteLine("5- Display All Departments");
-            Console.WriteLine("6- Generate Reports");
-            Console.WriteLine("7- Exit \n");
+            AnsiConsole.Write(new FigletText(FigletFont.Load("../../../Fonts/Big Money-ne.flf"), "EM System").Centered().Color(Color.Green3_1));
+            Console.WriteLine();
+            AnsiConsole.Write(new Rule("[bold][green]Welcome to the Employee Management System[/][/]").Centered());
+            Console.WriteLine();
         }
 
-        public static void DisplayReportMenu()
+        public static string DisplayMainMenu()
+        {
+            var selection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Use Arrow Keys to Select an [green]option[/]:")
+                .MoreChoicesText("[grey]Move up and down to reveal more options[/]")
+                .AddChoices(new[] { "Add an Employee", "Display All Employees", "Promote an Employee", "Add a Department", "Display All Departments", "Generate Reports", "Exit" })
+            );
+
+            return selection;
+        }
+
+        public static string DisplayReportMenu()
         {
             Console.Clear();
-            Console.WriteLine("Choose Report Type \n");
-            Console.WriteLine("1- Display Employees Per Department");
-            Console.WriteLine("2- Top Performers");
-            Console.WriteLine("3- Salary Distribution");
-            Console.WriteLine("4- Return To Main Menu\n");
+            DisplayLogo();
+            AnsiConsole.MarkupLine("[bold]Choose Report Type[/]\n");
+            var selectionDictionary = new Dictionary<string, string>
+            {
+                { "Employees Per Department" , "1" },
+                { "Top Performers" , "2" },
+                { "Salary Distribution" , "3" },
+                { "Return To Main Menu" , "4" }
+            };
+
+            var selection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .AddChoices(selectionDictionary.Keys)
+            );
+
+            return selectionDictionary[selection];
         }
 
         public static void AddEmployee(Company company)
@@ -41,19 +61,46 @@ namespace EmployeeManagementSystem.Utilities
             bool isValid = false;
             do
             {
-                Console.WriteLine("Creating a New Employee... \n");
-                Console.WriteLine("Choose Employee Name");
-                string userName = Console.ReadLine()!;
-                Console.WriteLine("Choose Age");
-                string age = Console.ReadLine()!;
-                Console.WriteLine("Choose Salary");
-                string salary = Console.ReadLine()!;
-                Console.WriteLine("Choose Job Title (Fresher = 0, Junior = 1, Mid = 2, Senior = 3, Principal = 4 )");
-                string jobTitle = Console.ReadLine()!;
-                Console.WriteLine("Choose Departement Name");
-                string departmentName = Console.ReadLine()!;
+                AnsiConsole.MarkupLine("[bold]Creating a New Employee...[/]");
 
-                isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle ,departmentName, out Employee employee);
+                AnsiConsole.MarkupLine("\nEnter Employee [green]Name[/]");
+                string userName = Console.ReadLine()!;
+
+                AnsiConsole.MarkupLine("Enter Employee [green]Age[/]");
+                string age = Console.ReadLine()!;
+
+                AnsiConsole.MarkupLine("Enter Employee [green]Salary[/]");
+                string salary = Console.ReadLine()!;
+
+                var jobTitleDictionary = new Dictionary<string, string>
+                {
+                    { "Fresher", "0" },
+                    { "Junior", "1" },
+                    { "Mid", "2" },
+                    { "Senior", "3" },
+                    { "Principal", "4" }
+                };
+                string jobTitleSelection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Choose Employee [green]Job Title[/]")
+                .AddChoices(jobTitleDictionary.Keys)
+                );
+                AnsiConsole.MarkupLine("Choose Employee [green]Job Title[/]");
+                Console.WriteLine(jobTitleSelection);
+                string jobTitle = jobTitleDictionary[jobTitleSelection];
+
+
+                var DepartmentList = company.GetDepartmentList().Select(x => x.GetDepartmentName());
+                string departmentSelection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Choose [green]DepartmentName[/]")
+                .AddChoices(DepartmentList)
+                );
+                AnsiConsole.MarkupLine("Choose [green]DepartmentName[/]");
+                Console.WriteLine(departmentSelection);
+                string departmentName = departmentSelection;
+
+                isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle, departmentName, out Employee employee);
                 if (isValid)
                 {
                     using (var _context = new EMSContext())  
@@ -71,9 +118,11 @@ namespace EmployeeManagementSystem.Utilities
                         _context.Employees.Add(employee);
                         _context.SaveChanges();
                     }
-                    ConsoleExtension.WriteSuccess("Employee Added Successfully, Returning to the Main Menu ....");
-                    Thread.Sleep(1500);
+                    ConsoleExtension.WriteSuccess("\nEmployee Added Successfully");
+                    Console.WriteLine("Press any key to return to the Main menu...");
+                    Console.ReadKey();
                     Console.Clear();
+                    DisplayLogo();
                 }
 
             } while (!isValid);
@@ -82,22 +131,110 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void DisplayEmployees(Company company)
         {
-            Console.WriteLine("Displaying All Employees....\n\n");
-            Console.WriteLine($"ID\t {"Name".PadRight(15)}\t Age\t Salary \t Department \t EmploymentDate\t Rate\t\t JobTitle");
-            Console.WriteLine(new string('─', 115));
-            foreach (Department department in company.GetDepartmentList())
+            AnsiConsole.Status().Start("Displaying All Employees....", ctx =>
             {
-                foreach (Employee employee in department.DisplayDepartmentEmployees())
+                Thread.Sleep(1000);
+            });
+
+            AnsiConsole.Write(new Text("Employees List \n ").Centered());
+
+            var table = new Table().Centered().Border(TableBorder.Double);
+            table.AddColumn("ID");
+            table.AddColumn("Name");
+            table.AddColumn("Age");
+            table.AddColumn("Salary");
+            table.AddColumn("Department");
+            table.AddColumn("Employment Date");
+            table.AddColumn("Rate");
+            table.AddColumns("Eligible");
+            table.AddColumn("Job Title");
+
+
+            AnsiConsole.Live(table)
+                .Start(ctx =>
                 {
-                    employee.DisplayEmployeeInfo();
-                    Console.WriteLine(new string('─', 115));
-                }
-            }
+                    foreach (Department department in company.GetDepartmentList())
+                    {
+                        foreach (Employee employee in department.DisplayDepartmentEmployees())
+                        {
+                            table.AddRow(
+                                employee.GetEmployeeId().ToString(),
+                                employee.GetEmployeeName(),
+                                employee.GetAge().ToString(),
+                                employee.GetSalary().ToString("N0"),
+                                department.GetDepartmentName(),
+                                employee.GetEmployementDate().ToString(),
+                                employee.GetEmployeeRate().ToString(),
+                                employee.IsEligible().ToString(),
+                                employee.GetJopTitle().ToString());
+
+                            ctx.Refresh();
+                            Thread.Sleep(200);
+
+                        }
+                    }
+
+                });
+
         }
 
         public static void PromoteEmployee()
         {
-            Console.WriteLine("Not Implemented Yet... !");
+            AnsiConsole.MarkupLine("[bold]Promoting an Employee...[/]");
+
+            AnsiConsole.MarkupLine("\nEnter Employee [green]ID[/]");
+            string id = Console.ReadLine()!;
+
+            if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+            }
+            else
+            {
+                Employee? employee = company.GetDepartmentList()
+                    .SelectMany(x => x.Employees)
+                    .FirstOrDefault(x => x.GetEmployeeId() == idInt);
+
+                if (employee is null)
+                {
+                    ConsoleExtension.WriteError("\nEmployee Not Found");
+                }
+                else
+                {
+                    if (!employee.IsEligible())
+                    {
+                        ConsoleExtension.WriteError("\nEmployee is Not Eligible for Promotion");
+                        return;
+                    }
+
+
+                    var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
+                    empBefore.AddColumn(employee.GetEmployeeId().ToString());
+                    empBefore.AddColumn(employee.GetEmployeeName());
+                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetSalary().ToString("N0")}[/]")));
+                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetJopTitle().ToString()}[/]")));
+                    empBefore.Columns[0].Width = 5;
+                    empBefore.Columns[1].Width = empBefore.Columns[2].Width = empBefore.Columns[3].Width = 10;
+                    AnsiConsole.Write(empBefore);
+
+                    PerformenceReview.GivePromotion(employee);
+                    AnsiConsole.Write(new Text("↓").Centered());
+
+                    var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
+                    empAfter.AddColumn(employee.GetEmployeeId().ToString());
+                    empAfter.AddColumn(employee.GetEmployeeName());
+                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetSalary().ToString("N0")}[/]")));
+                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetJopTitle().ToString()}[/]")));
+                    empAfter.Columns[0].Width = 5;
+                    empAfter.Columns[1].Width = empAfter.Columns[2].Width = empAfter.Columns[3].Width = 10;
+                    AnsiConsole.Write(empAfter);
+
+
+                    ConsoleExtension.WriteSuccess("\nEmployee Promoted Successfully");
+
+                }
+
+            }
         }
 
         public static void AddDepartment(Company company)
@@ -105,22 +242,28 @@ namespace EmployeeManagementSystem.Utilities
             bool isValid = false;
             do
             {
-                Console.WriteLine("Choose Department Name");
+                AnsiConsole.MarkupLine("[bold]Create a new Department[/]\n");
+
+                AnsiConsole.MarkupLine("Enter Department [green]Name[/]");
                 string departmentName = Console.ReadLine()!;
-                Console.WriteLine("Choose Department Head ID");
+
+                AnsiConsole.MarkupLine("Choose Department [green]Head ID[/] (Optional)");
                 string departmentHeadID = Console.ReadLine()!;
+
                 isValid = Validator.ValidateDepartment(departmentName, departmentHeadID, out Employee head);
 
                 if (isValid)
                 {
-                    Department department =  new Department(departmentName , head);
+                    Department department = new Department(departmentName, head);
                     company.AddDepartment(department);
-                    if(head is null)
-                        ConsoleExtension.WriteWarning("Warning : Department Has Been Created With no Head");
+                    if (head is null)
+                        ConsoleExtension.WriteWarning("\nWarning : Department Has Been Created With no Head");
                     else
-                        ConsoleExtension.WriteSuccess("Department Added Successfully, Returning to the Main Menu ....");
-                    Thread.Sleep(1800);
+                        ConsoleExtension.WriteSuccess("\nDepartment Added Successfully");
+                    Console.WriteLine("Press any key to return to the Main menu...");
+                    Console.ReadKey();
                     Console.Clear();
+                    DisplayLogo();
                 }
             }
             while (!isValid);
@@ -129,14 +272,26 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void DisplayDepartments(Company company)
         {
-            Console.WriteLine("Displaying All Departments....\n\n");
-            Console.WriteLine($"{"Name".PadRight(10)}\t Department Head");
-            Console.WriteLine(new string('─', 35));
-            foreach (Department department in company.GetDepartmentList())
+            AnsiConsole.Status().Start("Displaying All Departments....", ctx =>
             {
-                Console.WriteLine($"{department.GetDepartmentName()}\t\t {department.GetDepartmentHeadName()}");
-                Console.WriteLine(new string('─', 35));
-            }
+                Thread.Sleep(1000);
+            });
+
+            AnsiConsole.Write(new Text("Departments List \n ").Centered());
+
+            var table = new Table().Centered().Border(TableBorder.Double);
+            table.AddColumn("Department Name");
+            table.AddColumn("Department Head");
+
+            AnsiConsole.Live(table).Start(ctx =>
+            {
+                foreach (Department department in company.GetDepartmentList())
+                {
+                    table.AddRow(department.GetDepartmentName(), department.GetDepartmentHeadName());
+                    ctx.Refresh();
+                    Thread.Sleep(200);
+                }
+            });
         }
 
         public static void GenerateSalaryDistributionReport()
