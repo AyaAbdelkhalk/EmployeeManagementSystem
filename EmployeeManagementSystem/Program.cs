@@ -11,6 +11,7 @@ namespace EmployeeManagementSystem
             Validator.Company = company;
             CommandManager.company = company;
 
+
             Department ITDepartement = new Department("IT");
             Department HRDepartement = new Department("HR");
             Department FinanceDepartement = new Department("Finance");

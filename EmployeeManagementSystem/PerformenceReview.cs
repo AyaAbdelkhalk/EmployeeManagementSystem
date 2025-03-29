@@ -10,6 +10,7 @@ namespace EmployeeManagementSystem
     {
         public static void GivePromotion(Employee employee)
         {
+
             if (employee.IsEligible())
             {
                 decimal newSalary = employee.GetSalary() + (employee.GetSalary()) * .15m;

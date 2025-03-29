@@ -9,9 +9,11 @@ using System.Xml.Linq;
 
 namespace EmployeeManagementSystem.Utilities
 {
+
     internal static class CommandManager
     {
         public static Company company = new Company();
+        private readonly static EMSContext _context = new EMSContext();
 
         public static void DisplayLogo()
         {
@@ -101,6 +103,21 @@ namespace EmployeeManagementSystem.Utilities
                 isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle, departmentName, out Employee employee);
                 if (isValid)
                 {
+                    using (var _context = new EMSContext())  
+                    {
+                        var department = _context.Departments.FirstOrDefault(d => d.Name == departmentName);
+                        if (department == null)
+                        {
+                            ConsoleExtension.WriteError("Department not found.");
+                            return;
+                        }
+
+                        employee.DepartmentId = department.ID;
+                        employee.Department = department;
+
+                        _context.Employees.Add(employee);
+                        _context.SaveChanges();
+                    }
                     ConsoleExtension.WriteSuccess("\nEmployee Added Successfully");
                     Console.WriteLine("Press any key to return to the Main menu...");
                     Console.ReadKey();
