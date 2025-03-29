@@ -59,7 +59,7 @@ namespace EmployeeManagementSystem
                     var employee = context.Employees.Find(ID);
                     if (employee != null)
                     {
-                        employee.Rate = rate;
+                        employee.Rate = Rate = rate;
                         context.SaveChanges();
                     }
                 }
@@ -74,7 +74,7 @@ namespace EmployeeManagementSystem
                     var employee = context.Employees.Find(ID);
                     if (employee != null)
                     {
-                        employee.DepartmentId = department.ID;
+                        employee.DepartmentId = DepartmentId = department.ID;
                         context.SaveChanges();
                     }
                 }
@@ -149,6 +149,7 @@ namespace EmployeeManagementSystem
         }
         public void SetSalary(decimal salary)
         {
+            Salary = salary;
             using (var context = new EMSContext())
             {
                 var employee = context.Employees.Find(ID);

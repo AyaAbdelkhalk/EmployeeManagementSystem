@@ -38,11 +38,12 @@ namespace EmployeeManagementSystem
                     if (emp.IsEligible())
                     {
                         decimal newSalary = emp.GetSalary() + (emp.GetSalary()) * .15m;
-                        emp.SetSalary(newSalary) ;
+                        emp.SetSalary(newSalary);
+                        employee.SetSalary(newSalary);
                         if (emp.JopTitle != JopTitles.Principal)
                         {
                             JopTitles newJopTitle = (JopTitles)((int)emp.JopTitle + 1);
-                            emp.JopTitle = newJopTitle;
+                            emp.JopTitle = employee.JopTitle = newJopTitle;
                         }
                         context.SaveChanges();
                     }

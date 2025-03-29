@@ -240,7 +240,8 @@ namespace EmployeeManagementSystem.Utilities
 
                 if (isValid)
                 {
-                    Department department = new Department(departmentName, head);
+
+                    Department department = head is not null ? new Department(departmentName, head) : new Department(departmentName);
                     company.AddDepartment(department);
                     if (head is null)
                         ConsoleExtension.WriteWarning("\nWarning : Department Has Been Created With no Head");
@@ -295,53 +296,7 @@ namespace EmployeeManagementSystem.Utilities
         #region Reports
         public static void GenerateSalaryDistributionReport()
         {
-            AnsiConsole.Status().Start("Generating Salary Distribution Report...", ctx =>
-            {
-                Thread.Sleep(1000);
-            });
-
-            AnsiConsole.Write(new Text("Salary Distribution Report \n").Centered());
-
-            var table = new Table().Centered().Border(TableBorder.Double);
-            table.AddColumn("ID");
-            table.AddColumn("Name");
-            table.AddColumn("Age");
-            table.AddColumn("Salary");
-            table.AddColumn("Department");
-            table.AddColumn("Employment Date");
-            table.AddColumn("Rate");
-            table.AddColumn("Eligible");
-            table.AddColumn("Job Title");
-            table.AddColumn("Is Terminated?");
-
-            using (var context = new EMSContext())
-            {
-                var employees = context.Employees
-                    .Include(e => e.Department)
-                    .ToList();
-
-                AnsiConsole.Live(table).Start(ctx =>
-                {
-                    foreach (var employee in employees)
-                    {
-                        table.AddRow(
-                            employee.ID.ToString(),
-                            employee.GetEmployeeName(),
-                            employee.GetAge().ToString(),
-                            $"{employee.GetSalary():N0} EGP",
-                            employee.Department.GetDepartmentName(),
-                            employee.GetEmployementDate().ToString(),
-                            employee.GetRate(),
-                            employee.IsEligible() ? "Yes" : "No",
-                            employee.GetJopTitle().ToString(),
-                            employee.IsTerminated() ? "Yes" : "No"
-                        );
-
-                        ctx.Refresh();
-                        Thread.Sleep(200);
-                    }
-                });
-            }
+            company.GenerateSalaryDistributionReport();
         }
 
         public static void GenerateTopPerformersReport()

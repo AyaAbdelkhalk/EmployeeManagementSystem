@@ -1,105 +1,133 @@
 [
   {
-    "DepartmentName": "Dept1",
+    "DepartmentName": "Marketing",
     "Employees": [
       {
-        "EmployeeID": 10,
-        "Name": "ds",
-        "Salary": 6776.00,
-        "Department": "Dept1",
+        "EmployeeID": 4,
+        "Name": "RT",
+        "Salary": 45455.00,
+        "Department": "Marketing",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": 5,
+        "Name": "Ahmed Nooooor",
+        "Salary": 23000.00,
+        "Department": "Marketing",
         "EmploymentDate": "2025-03-29"
       }
     ]
   },
   {
-    "DepartmentName": "Dept2",
-    "Employees": []
-  },
-  {
-    "DepartmentName": "Dept3",
+    "DepartmentName": "Finance",
     "Employees": [
       {
-        "EmployeeID": 16,
-        "Name": "Final test",
-        "Salary": 7899.00,
-        "Department": "Dept3",
-        "EmploymentDate": "2025-03-29"
-      }
-    ]
-  },
-  {
-    "DepartmentName": "DDD",
-    "Employees": [
-      {
-        "EmployeeID": 11,
-        "Name": "test",
-        "Salary": 7688.00,
-        "Department": "DDD",
+        "EmployeeID": -2,
+        "Name": "Ali Saad",
+        "Salary": 7000.00,
+        "Department": "Finance",
         "EmploymentDate": "2025-03-29"
       },
       {
-        "EmployeeID": 14,
-        "Name": "frrgtg",
-        "Salary": 6789.00,
-        "Department": "DDD",
+        "EmployeeID": -1,
+        "Name": "Ahmed Fahmy",
+        "Salary": 6612.50,
+        "Department": "Finance",
         "EmploymentDate": "2025-03-29"
-      },
-      {
-        "EmployeeID": 15,
-        "Name": "RTTTTTTTTTTTTT",
-        "Salary": 7879.00,
-        "Department": "DDD",
-        "EmploymentDate": "2025-03-29"
-      }
-    ]
-  },
-  {
-    "DepartmentName": "DFG",
-    "Employees": [
-      {
-        "EmployeeID": 1,
-        "Name": "Aya",
-        "Salary": 4041.00,
-        "Department": "DFG",
-        "EmploymentDate": "2024-02-02"
-      },
-      {
-        "EmployeeID": 2,
-        "Name": "doha",
-        "Salary": 5005.00,
-        "Department": "DFG",
-        "EmploymentDate": "2024-02-02"
-      },
-      {
-        "EmployeeID": 3,
-        "Name": "sara",
-        "Salary": 5050.00,
-        "Department": "DFG",
-        "EmploymentDate": "2024-02-02"
       },
       {
         "EmployeeID": 6,
-        "Name": "jam",
-        "Salary": 5145.00,
-        "Department": "DFG",
-        "EmploymentDate": "2025-02-02"
+        "Name": "Ahmed Saber",
+        "Salary": 30000.00,
+        "Department": "Finance",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": 7,
+        "Name": "r",
+        "Salary": 34343.00,
+        "Department": "Finance",
+        "EmploymentDate": "2025-03-29"
       }
     ]
-  },
-  {
-    "DepartmentName": "Deptttt",
-    "Employees": []
   },
   {
     "DepartmentName": "HR",
     "Employees": [
       {
-        "EmployeeID": 17,
-        "Name": "fvfxvdf",
-        "Salary": 78797.00,
+        "EmployeeID": -7,
+        "Name": "Fouad Magdy",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -6,
+        "Name": "Taha Ragab",
+        "Salary": 17490.06,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -5,
+        "Name": "Ashraf Khaled",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -4,
+        "Name": "Momen Ahmed",
+        "Salary": 10000.00,
         "Department": "HR",
         "EmploymentDate": "2025-03-29"
       }
     ]
+  },
+  {
+    "DepartmentName": "IT",
+    "Employees": [
+      {
+        "EmployeeID": -3,
+        "Name": "Omar Abdelbaset",
+        "Salary": 13687.88,
+        "Department": "IT",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": 3,
+        "Name": "Ahmed",
+        "Salary": 45455.00,
+        "Department": "IT",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": 8,
+        "Name": "Elon Kalb",
+        "Salary": 10000.00,
+        "Department": "IT",
+        "EmploymentDate": "2025-03-29"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "RT",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "YT",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "TeleCommunications",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "Test",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "RTa",
+    "Employees": []
   }
 ]
