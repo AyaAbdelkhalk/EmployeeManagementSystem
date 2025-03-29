@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeManagementSystem.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EmployeeManagementSystem
@@ -185,6 +187,82 @@ namespace EmployeeManagementSystem
         //    }
         //    return false;
         //}
+
+
+        public void SaveSalaryDistributionReport()
+        {
+            var departments = GetDepartmentList();
+            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\SalaryDistributionReport.txt";
+            var reportData = departments.Select(department => new
+            {
+                DepartmentName = department.GetDepartmentName(),
+                Employees = department.Employees.Select(employee => new
+                {
+                    EmployeeID = employee.ID,
+                    Name = employee.GetEmployeeName(),
+                    Salary = employee.GetSalary(),
+                    Department = department.GetDepartmentName(),
+                    EmploymentDate = employee.GetEmployementDate().ToString("yyyy-MM-dd")
+                }).ToList()
+            }).ToList();
+
+            string json = JsonSerializer.Serialize(reportData, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(fileName, json);
+            ConsoleExtension.WriteSuccess(fileName);
+        }
+
+        public void SaveTopPerformersReport(int count = 5)
+        {
+            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\TopPerformersReport.txt";
+            var topPerformers = _context.Employees
+                .Include(e => e.Department)
+                .Where(e => e.Rate != Rate.Unrated)
+                .OrderByDescending(e => e.Rate)
+                .Take(count)
+                .Select(e => new
+                {
+                    EmployeeID = e.ID,
+                    Name = e.GetEmployeeName(),
+                    Department = e.Department.GetDepartmentName(),
+                    Rating =e.GetRate(),
+                    Salary = e.GetSalary()
+                }).ToList();
+
+            string json = JsonSerializer.Serialize(topPerformers, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(fileName, json);
+            ConsoleExtension.WriteSuccess(fileName);
+        }
+
+        public void SaveEmployeesPerDepartmentReport()
+        {
+            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\EmployeesPerDepartmentReport.txt";
+            var departments = GetDepartmentList();
+
+            var reportData = departments.Select(department => new
+            {
+                DepartmentName = department.GetDepartmentName(),
+                Employees = department.Employees.Select(employee => new
+                {
+                    EmployeeID = employee.ID,
+                    Name = employee.GetEmployeeName(),
+                    Age = employee.GetAge(),
+                    Salary = employee.GetSalary(),
+                    JobTitle = employee.GetJopTitle().ToString()
+                }).ToList()
+            }).ToList();
+
+            string json = JsonSerializer.Serialize(reportData, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(fileName, json);
+            ConsoleExtension.WriteSuccess(fileName);
+        }
+
+
+      
+
+
 
     }
 }

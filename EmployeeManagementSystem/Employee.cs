@@ -124,6 +124,10 @@ namespace EmployeeManagementSystem
         {
             return Salary;
         }
+        public string GetRate()
+        {
+            return Rate.ToString();
+        }
 
         public DateOnly GetEmployementDate()
         {

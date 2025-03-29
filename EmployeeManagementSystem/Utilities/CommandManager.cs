@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Microsoft.EntityFrameworkCore;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -272,26 +273,61 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void DisplayDepartments(Company company)
         {
-            AnsiConsole.Status().Start("Displaying All Departments....", ctx =>
+            #region Old 
+            //AnsiConsole.Status().Start("Displaying All Departments....", ctx =>
+            //{
+            //    Thread.Sleep(1000);
+            //});
+
+            //AnsiConsole.Write(new Text("Departments List \n ").Centered());
+
+            //var table = new Table().Centered().Border(TableBorder.Double);
+            //table.AddColumn("Department Name");
+            //table.AddColumn("Department Head");
+
+            //AnsiConsole.Live(table).Start(ctx =>
+            //{
+            //    foreach (Department department in company.GetDepartmentList())
+            //    {
+            //        table.AddRow(department.GetDepartmentName(), department.GetDepartmentHeadName());
+            //        ctx.Refresh();
+            //        Thread.Sleep(200);
+            //    }
+            //}); 
+            #endregion
+
+            using (var _context = new EMSContext())
             {
-                Thread.Sleep(1000);
-            });
-
-            AnsiConsole.Write(new Text("Departments List \n ").Centered());
-
-            var table = new Table().Centered().Border(TableBorder.Double);
-            table.AddColumn("Department Name");
-            table.AddColumn("Department Head");
-
-            AnsiConsole.Live(table).Start(ctx =>
-            {
-                foreach (Department department in company.GetDepartmentList())
+                AnsiConsole.Status().Start("Retrieving Departments from Database...", ctx =>
                 {
-                    table.AddRow(department.GetDepartmentName(), department.GetDepartmentHeadName());
-                    ctx.Refresh();
-                    Thread.Sleep(200);
+                    Thread.Sleep(1000);
+                });
+
+                var departments = _context.Departments.Include(d => d.Employees).ToList();
+
+                if (!departments.Any())
+                {
+                    ConsoleExtension.WriteWarning("No departments found.");
+                    return;
                 }
-            });
+
+                AnsiConsole.Write(new Text("Departments List \n ").Centered());
+
+                var table = new Table().Centered().Border(TableBorder.Double);
+                table.AddColumn("Department Name");
+                table.AddColumn("Department Head");
+
+                AnsiConsole.Live(table).Start(ctx =>
+                {
+                    foreach (var department in departments)
+                    {
+                        string departmentHead = department.GetDepartmentHeadName() ?? "No Head";
+                        table.AddRow(department.GetDepartmentName(), departmentHead);
+                        ctx.Refresh();
+                        Thread.Sleep(200);
+                    }
+                });
+            }
         }
 
         public static void GenerateSalaryDistributionReport()
@@ -308,6 +344,23 @@ namespace EmployeeManagementSystem.Utilities
         {
             company.GenerateEmployeesPerDepartmentReport();
         }
+
+        //Files
+
+        #region Files
+        public static void SaveSalaryDistributionReport()
+        {
+            company.SaveSalaryDistributionReport();
+        }
+        public static void SaveTopPerformersReport()
+        {
+            company.SaveTopPerformersReport();
+        }
+        public static void SaveEmployeesPerDepartmentReport()
+        {
+            company.SaveEmployeesPerDepartmentReport();
+        }
+        #endregion
 
     }
 }
