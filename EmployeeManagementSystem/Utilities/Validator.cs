@@ -17,7 +17,7 @@ namespace EmployeeManagementSystem.Utilities
             if (string.IsNullOrEmpty(name))
                 errors.Add("Department Name is Required");
 
-            if(Company.GetDepartmentList().Any(x => x.GetDepartmentName() == name))
+            if(Company.GetDepartmentList().Any(x => x.GetDepartmentName().ToLower() == name.ToLower()))
             {
                 errors.Add("Department with this name already exists");
             }

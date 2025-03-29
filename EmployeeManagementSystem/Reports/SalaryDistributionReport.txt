@@ -1,0 +1,69 @@
+[
+  {
+    "DepartmentName": "Marketing",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "Finance",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "HR",
+    "Employees": [
+      {
+        "EmployeeID": -7,
+        "Name": "Fouad Magdy",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -6,
+        "Name": "Taha Ragab",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -5,
+        "Name": "Ashraf Khaled",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -4,
+        "Name": "Momen Ahmed",
+        "Salary": 10000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -2,
+        "Name": "Ali Saad",
+        "Salary": 7000.00,
+        "Department": "HR",
+        "EmploymentDate": "2025-03-29"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "IT",
+    "Employees": [
+      {
+        "EmployeeID": -3,
+        "Name": "Omar Abdelbaset",
+        "Salary": 9000.00,
+        "Department": "IT",
+        "EmploymentDate": "2025-03-29"
+      },
+      {
+        "EmployeeID": -1,
+        "Name": "Ahmed Fahmy",
+        "Salary": 5000.00,
+        "Department": "IT",
+        "EmploymentDate": "2025-03-29"
+      }
+    ]
+  }
+]

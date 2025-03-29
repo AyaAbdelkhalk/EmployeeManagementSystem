@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagementSystem
 {
-    class Department
+    class Department : IDisposable
     {
+        private readonly EMSContext _context = new EMSContext();
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int ID { get; set; }
@@ -36,8 +38,9 @@ namespace EmployeeManagementSystem
 
         public void setDepartmentHead(Employee employee)
         {
-            DepartmentHead = employee;
+            //DepartmentHead = employee;
             DepartmentHeadId = employee.ID;
+            _context.SaveChanges();
         }
 
 
@@ -79,6 +82,11 @@ namespace EmployeeManagementSystem
         public string GetDepartmentHeadName()
         {
             return DepartmentHead is null ? "No Head" : DepartmentHead.GetEmployeeName();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

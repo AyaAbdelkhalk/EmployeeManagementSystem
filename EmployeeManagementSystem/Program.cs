@@ -11,38 +11,31 @@ namespace EmployeeManagementSystem
             Validator.Company = company;
             CommandManager.company = company;
 
-            #region Need to added in console as options
-            //if you need to test it change location
-            CommandManager.SaveSalaryDistributionReport();
-            CommandManager.SaveTopPerformersReport();
-            CommandManager.SaveEmployeesPerDepartmentReport();
-            #endregion
-
             #region Seeding data
-            //Department ITDepartement = new Department("IT");
-            //Department HRDepartement = new Department("HR");
-            //Department FinanceDepartement = new Department("Finance");
-            //Department MarketingDepartement = new Department("Marketing");
-            //company.AddDepartment(ITDepartement);
-            //company.AddDepartment(HRDepartement);
-            //company.AddDepartment(FinanceDepartement);
-            //company.AddDepartment(MarketingDepartement);
+           /* Department ITDepartement = new Department("IT");
+            Department HRDepartement = new Department("HR");
+            Department FinanceDepartement = new Department("Finance");
+            Department MarketingDepartement = new Department("Marketing");
+            company.AddDepartment(ITDepartement);
+            company.AddDepartment(HRDepartement);
+            company.AddDepartment(FinanceDepartement);
+            company.AddDepartment(MarketingDepartement);
 
-            //Employee employee1 = new Employee("Ahmed Fahmy", 25, 5000, JopTitles.Mid, ITDepartement);
-            //Employee employee2 = new Employee("Ali Saad", 30, 7000, JopTitles.Mid, HRDepartement);
-            //Employee employee3 = new Employee("Omar Abdelbaset", 35, 9000, JopTitles.Junior, ITDepartement);
-            //Employee employee4 = new Employee("Momen Ahmed", 40, 10000, JopTitles.Senior, HRDepartement);
-            //Employee employee5 = new Employee("Ashraf Khaled", 40, 10000, JopTitles.Principal, HRDepartement);
-            //Employee employee6 = new Employee("Taha Ragab", 40, 10000, JopTitles.Fresher, HRDepartement);
-            //Employee employee7 = new Employee("Fouad Magdy", 40, 10000, JopTitles.Senior, HRDepartement);
-            //ITDepartement.setDepartmentHead(employee3);
-            //HRDepartement.setDepartmentHead(employee4);
+            Employee employee1 = new Employee("Ahmed Fahmy", 25, 5000, JopTitles.Mid, ITDepartement);
+            Employee employee2 = new Employee("Ali Saad", 30, 7000, JopTitles.Mid, HRDepartement);
+            Employee employee3 = new Employee("Omar Abdelbaset", 35, 9000, JopTitles.Junior, ITDepartement);
+            Employee employee4 = new Employee("Momen Ahmed", 40, 10000, JopTitles.Senior, HRDepartement);
+            Employee employee5 = new Employee("Ashraf Khaled", 40, 10000, JopTitles.Principal, HRDepartement);
+            Employee employee6 = new Employee("Taha Ragab", 40, 10000, JopTitles.Fresher, HRDepartement);
+            Employee employee7 = new Employee("Fouad Magdy", 40, 10000, JopTitles.Senior, HRDepartement);
+            ITDepartement.setDepartmentHead(employee3);
+            HRDepartement.setDepartmentHead(employee4);
 
 
-            //employee1.SetRate(Rate.MeetsExpectations);
-            //employee2.SetRate(Rate.ExceedsExpectations);
-            //employee3.SetRate(Rate.Unacceptable);
-            //employee4.SetRate(Rate.Outstanding); 
+            employee1.SetRate(Rate.MeetsExpectations);
+            employee2.SetRate(Rate.ExceedsExpectations);
+            employee3.SetRate(Rate.Unacceptable);
+            employee4.SetRate(Rate.Outstanding);*/
             #endregion
 
 
@@ -62,6 +55,12 @@ namespace EmployeeManagementSystem
                         break;
                     case "Promote an Employee":
                         CommandManager.PromoteEmployee();
+                        break;
+                    case "Rate an Employee":
+                        CommandManager.RateEmployee();
+                        break;
+                    case "Transfer Departement":
+                        CommandManager.TransferDepartment();
                         break;
                     case "Add a Department":
                         CommandManager.AddDepartment(company);
@@ -84,6 +83,15 @@ namespace EmployeeManagementSystem
                                 CommandManager.GenerateSalaryDistributionReport();
                                 break;
                             case "4":
+                                CommandManager.SaveEmployeesPerDepartmentReport();
+                                break;
+                            case "5":
+                                CommandManager.SaveSalaryDistributionReport();
+                                break;
+                            case "6":
+                                CommandManager.SaveTopPerformersReport();
+                                break;
+                            case "7":
                                 Console.Clear();
                                 CommandManager.DisplayLogo();
                                 break;

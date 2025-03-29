@@ -35,7 +35,7 @@ namespace EmployeeManagementSystem
             Age = age;
             Salary = salary;
             DepartmentId = department.ID;
-            Department = department;
+            
             Terminate = false;
             Rate = Rate.Unrated;
             JopTitle = jopTitles;
@@ -63,10 +63,11 @@ namespace EmployeeManagementSystem
             if (department != null && Terminate == false)
             {
                 Department.RemoveEmployeeFromDepartment(this);
-                Department = department;
+                DepartmentId = department.ID;
                 Department.AddEmployeeToDepartment(this);
             }
         }
+
         public void TerminateEmployee()
         {
             Terminate = true;

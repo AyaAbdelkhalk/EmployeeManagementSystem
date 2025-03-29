@@ -30,7 +30,7 @@ namespace EmployeeManagementSystem.Utilities
                 new SelectionPrompt<string>()
                 .Title("Use Arrow Keys to Select an [green]option[/]:")
                 .MoreChoicesText("[grey]Move up and down to reveal more options[/]")
-                .AddChoices(new[] { "Add an Employee", "Display All Employees", "Promote an Employee", "Add a Department", "Display All Departments", "Generate Reports", "Exit" })
+                .AddChoices(new[] { "Add an Employee", "Display All Employees", "Promote an Employee", "Rate an Employee" ,"Transfer Departement", "Add a Department", "Display All Departments", "Generate Reports", "Exit" })
             );
 
             return selection;
@@ -43,10 +43,13 @@ namespace EmployeeManagementSystem.Utilities
             AnsiConsole.MarkupLine("[bold]Choose Report Type[/]\n");
             var selectionDictionary = new Dictionary<string, string>
             {
-                { "Employees Per Department" , "1" },
-                { "Top Performers" , "2" },
-                { "Salary Distribution" , "3" },
-                { "Return To Main Menu" , "4" }
+                { "Display Employees Per Department" , "1" },
+                { "Display Top Performers" , "2" },
+                { "Display Salary Distribution" , "3" },       
+                { "Save Employees Per Department Report" , "4" },
+                { "Save Salary Distribution Report" , "5" },
+                { "Save Top Performers Report" , "6" },
+                { "Return To Main Menu" , "7" },
             };
 
             var selection = AnsiConsole.Prompt(
@@ -345,7 +348,6 @@ namespace EmployeeManagementSystem.Utilities
             company.GenerateEmployeesPerDepartmentReport();
         }
 
-        //Files
 
         #region Files
         public static void SaveSalaryDistributionReport()
@@ -360,7 +362,102 @@ namespace EmployeeManagementSystem.Utilities
         {
             company.SaveEmployeesPerDepartmentReport();
         }
+
+
         #endregion
 
+
+        internal static void RateEmployee()
+        {
+            AnsiConsole.MarkupLine("[bold]Rating an Employee...[/]");
+
+            AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
+            string empId = Console.ReadLine()!;
+
+            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+                return;
+            }
+            
+            Employee? employee = _context.Employees.FirstOrDefault(x => x.ID == idInt);
+            if (employee is null)
+            {
+                ConsoleExtension.WriteError("\nEmployee Not Found");
+                return;
+            }
+           
+            if (employee.IsTerminated())
+            {
+                ConsoleExtension.WriteError("\nEmployee is Terminated");
+                return;
+            }
+                
+            
+
+            var RateDictionary = new Dictionary<string, int>
+                {
+                    { "Unacceptable", 1 },
+                    { "NeedsImprovement", 2 },
+                    { "MeetsExpectations", 3 },
+                    { "ExceedsExpectations", 4 },
+                    { "Outstanding", 5 }
+                };
+
+            string rateSelection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Choose Employee [green]Performance[/]")
+            .AddChoices(RateDictionary.Keys)
+            );
+
+            AnsiConsole.MarkupLine("Choose Employee [green]Performance[/]");
+            Console.WriteLine(rateSelection);
+
+
+            Employee emp = _context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
+            emp.SetRate((Rate)RateDictionary[rateSelection]);
+            _context.SaveChanges();
+
+        }
+
+        internal static void TransferDepartment()
+        {
+            AnsiConsole.MarkupLine("[bold]Transfer Departement ...[/]");
+
+            AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
+            string empId = Console.ReadLine()!;
+
+            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+                return;
+            }
+
+            Employee? employee = _context.Employees.Include(x => x.Department).FirstOrDefault(x => x.ID == idInt);
+            if (employee is null)
+            {
+                ConsoleExtension.WriteError("\nEmployee Not Found");
+                return;
+            }
+
+            if (employee.IsTerminated())
+            {
+                ConsoleExtension.WriteError("\nEmployee is Terminated");
+                return;
+            }
+
+            var DepartmentList = _context.Departments.Where(x => x.ID != employee.DepartmentId).Select(x => x.GetDepartmentName());
+            string departmentSelection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Choose [green]DepartmentName[/]")
+                .AddChoices(DepartmentList)
+                );
+            AnsiConsole.MarkupLine("Choose [green]DepartmentName[/]");
+            Console.WriteLine(departmentSelection);
+
+            Department department = _context.Departments.FirstOrDefault(x => x.Name == departmentSelection)!;
+            employee.TransferDepartment(department);
+            _context.SaveChanges();
+        }
     }
 }

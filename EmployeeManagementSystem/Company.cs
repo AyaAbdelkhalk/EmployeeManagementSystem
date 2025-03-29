@@ -192,7 +192,8 @@ namespace EmployeeManagementSystem
         public void SaveSalaryDistributionReport()
         {
             var departments = GetDepartmentList();
-            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\SalaryDistributionReport.txt";
+            var fileName = "../../../Reports/SalaryDistributionReport.txt";
+            // var fileName = "C:\\Users\\Elnour Tech\\Desktop\\SalaryDistributionReport.txt";
             var reportData = departments.Select(department => new
             {
                 DepartmentName = department.GetDepartmentName(),
@@ -209,12 +210,14 @@ namespace EmployeeManagementSystem
             string json = JsonSerializer.Serialize(reportData, new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText(fileName, json);
-            ConsoleExtension.WriteSuccess(fileName);
+            ConsoleExtension.WriteSuccess("SalaryDistributionReport.txt have been saved on disk\n");
         }
 
         public void SaveTopPerformersReport(int count = 5)
         {
-            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\TopPerformersReport.txt";
+            var fileName = "../../../Reports/TopPerformersReport.txt";
+
+            //var fileName = "C:\\Users\\Elnour Tech\\Desktop\\TopPerformersReport.txt";
             var topPerformers = _context.Employees
                 .Include(e => e.Department)
                 .Where(e => e.Rate != Rate.Unrated)
@@ -232,12 +235,13 @@ namespace EmployeeManagementSystem
             string json = JsonSerializer.Serialize(topPerformers, new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText(fileName, json);
-            ConsoleExtension.WriteSuccess(fileName);
+            ConsoleExtension.WriteSuccess("TopPerformersReport.txt have been saved on disk\n");
         }
 
         public void SaveEmployeesPerDepartmentReport()
         {
-            var fileName = "C:\\Users\\Elnour Tech\\Desktop\\EmployeesPerDepartmentReport.txt";
+            var fileName = "../../../Reports/EmployeesPerDepartmentReport.txt";
+            //var fileName = "C:\\Users\\Elnour Tech\\Desktop\\EmployeesPerDepartmentReport.txt";
             var departments = GetDepartmentList();
 
             var reportData = departments.Select(department => new
@@ -256,11 +260,11 @@ namespace EmployeeManagementSystem
             string json = JsonSerializer.Serialize(reportData, new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText(fileName, json);
-            ConsoleExtension.WriteSuccess(fileName);
+            ConsoleExtension.WriteSuccess("EmployeesPerDepartmentReport.txt have been saved on disk\n");
         }
 
 
-      
+
 
 
 

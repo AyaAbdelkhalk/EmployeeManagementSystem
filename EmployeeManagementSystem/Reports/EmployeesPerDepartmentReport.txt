@@ -1,0 +1,69 @@
+[
+  {
+    "DepartmentName": "Marketing",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "Finance",
+    "Employees": []
+  },
+  {
+    "DepartmentName": "HR",
+    "Employees": [
+      {
+        "EmployeeID": -7,
+        "Name": "Fouad Magdy",
+        "Age": 40,
+        "Salary": 10000.00,
+        "JobTitle": "Senior"
+      },
+      {
+        "EmployeeID": -6,
+        "Name": "Taha Ragab",
+        "Age": 40,
+        "Salary": 10000.00,
+        "JobTitle": "Fresher"
+      },
+      {
+        "EmployeeID": -5,
+        "Name": "Ashraf Khaled",
+        "Age": 40,
+        "Salary": 10000.00,
+        "JobTitle": "Principal"
+      },
+      {
+        "EmployeeID": -4,
+        "Name": "Momen Ahmed",
+        "Age": 40,
+        "Salary": 10000.00,
+        "JobTitle": "Senior"
+      },
+      {
+        "EmployeeID": -2,
+        "Name": "Ali Saad",
+        "Age": 30,
+        "Salary": 7000.00,
+        "JobTitle": "Mid"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "IT",
+    "Employees": [
+      {
+        "EmployeeID": -3,
+        "Name": "Omar Abdelbaset",
+        "Age": 35,
+        "Salary": 9000.00,
+        "JobTitle": "Junior"
+      },
+      {
+        "EmployeeID": -1,
+        "Name": "Ahmed Fahmy",
+        "Age": 25,
+        "Salary": 5000.00,
+        "JobTitle": "Mid"
+      }
+    ]
+  }
+]
