@@ -1,5 +1,6 @@
 ﻿using EmployeeManagementSystem.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,7 @@ namespace EmployeeManagementSystem
                 .Include(d => d.Employees)
                 .FirstOrDefault(x => x.Name == departmentName);
         }
+
 
         public void DisplayCompanyDepartments()
         {
@@ -117,45 +119,78 @@ namespace EmployeeManagementSystem
             Console.WriteLine("\n=== Salary Distribution Report ===");
             var departments = GetDepartmentList();
 
-            Console.WriteLine("ID\t Name\t\t\t Age\t Salary\t\t Department\tEmployment Date\t Rate\t\t      Eligibility\t Job Title");
+            Console.WriteLine("ID\t Name\t\t\t Age\t Salary\t\t Department\t      Eligibility\t Job Title \t \t IsTerminated? \t Rate");
 
-            foreach (var department in departments)
+            using(var context = new EMSContext())
             {
-                var activeEmployees = department.Employees;
+                var employees = context.Employees
+                    .Include(e => e.Department)
+                    .ToList();
 
-                foreach (var employee in activeEmployees)
+                foreach (var employee in employees)
                 {
-                    employee.DisplayEmployeeInfo();
+                    Console.WriteLine($"{employee.ID}\t {employee.GetEmployeeName().PadRight(15)}\t {employee.GetAge()}\t {employee.GetSalary()} EGP\t {employee.Department.GetDepartmentName()}\t \t \t {employee.IsEligible()}\t  \t  {employee.GetJopTitle()}\t \t {employee.IsTerminated()} \t {employee.GetRate()}\t ");
                 }
             }
         }
 
         public void GenerateTopPerformersReport(int count = 5)
         {
-            Console.WriteLine("\n=== Top Performers Report ===");
-
-            //Get all active employees from all departments
-            var allEmployees = _context.Employees
-                .Include(e => e.Department)
-                .Where(e => e.Rate != Rate.Unrated)
-                .OrderByDescending(e => e.Rate)
-                .Take(count)
-                .ToList();
-
-
-            if (!allEmployees.Any())
+            AnsiConsole.Status().Start("Generating Top Performers Report...", ctx =>
             {
-                Console.WriteLine("No rated employees found");
-                return;
-            }
-            Console.WriteLine($"{"ID",-5}{"Name",-20}{"Department",-15}{"Rating",-20}{"Salary",-10}");
+                Thread.Sleep(1000);
+            });
 
+            AnsiConsole.Write(new Text("\nTop Performers Report\n").Centered());
 
-            foreach (var employee in allEmployees)
+            var table = new Table().Centered().Border(TableBorder.Double);
+            table.AddColumn("ID");
+            table.AddColumn("Name");
+            table.AddColumn("Age");
+            table.AddColumn("Salary");
+            table.AddColumn("Department");
+            table.AddColumn("Employment Date");
+            table.AddColumn("Rate");
+            table.AddColumn("Eligible");
+            table.AddColumn("Job Title");
+
+            using (var context = new EMSContext())
             {
-                Console.WriteLine($"{employee.ID,-5}{employee.GetEmployeeName(),-20}{employee.Department.GetDepartmentName(),-15}{employee.Rate,-20}{employee.GetSalary(),-10}");
-            }
+                var topEmployees = context.Employees
+                    .Include(e => e.Department)
+                    .Where(e => e.Rate != Rate.Unrated)
+                    .OrderByDescending(e => e.Rate)
+                    .Take(count)
+                    .ToList();
 
+                if (!topEmployees.Any())
+                {
+                    AnsiConsole.Markup("[red]No rated employees found![/]\n");
+                    return;
+                }
+
+                AnsiConsole.Live(table)
+                    .Start(ctx =>
+                    {
+                        foreach (var employee in topEmployees)
+                        {
+                            table.AddRow(
+                                employee.ID.ToString(),
+                                employee.GetEmployeeName(),
+                                employee.GetAge().ToString(),
+                                employee.GetSalary().ToString("N0") + " EGP",
+                                employee.Department.GetDepartmentName(),
+                                employee.GetEmployementDate().ToString(),
+                                employee.GetEmployeeRate().ToString(),
+                                employee.IsEligible().ToString(),
+                                employee.GetJopTitle().ToString()
+                            );
+
+                            ctx.Refresh();
+                            Thread.Sleep(200);
+                        }
+                    });
+            }
         }
         public void Dispose()
         {
@@ -189,6 +224,7 @@ namespace EmployeeManagementSystem
         //}
 
 
+        #region Reports
         public void SaveSalaryDistributionReport()
         {
             var departments = GetDepartmentList();
@@ -228,7 +264,7 @@ namespace EmployeeManagementSystem
                     EmployeeID = e.ID,
                     Name = e.GetEmployeeName(),
                     Department = e.Department.GetDepartmentName(),
-                    Rating =e.GetRate(),
+                    Rating = e.GetRate(),
                     Salary = e.GetSalary()
                 }).ToList();
 
@@ -264,6 +300,7 @@ namespace EmployeeManagementSystem
         }
 
 
+        #endregion
 
 
 

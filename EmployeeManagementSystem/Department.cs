@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -56,18 +57,24 @@ namespace EmployeeManagementSystem
 
         public List<Employee> DisplayDepartmentEmployees()
         {
-            //List<Employee> employees = new List<Employee>();
-            //foreach (Employee employee in Employees)
-            //{
-            //    if (employee.IsTerminated() == false)
-            //    {
-            //        employees.Add(employee);
-            //    }
-            //}
-            //return employees;
-            return Employees
-                .FindAll(e => e.IsTerminated() == false)
-                .ToList();
+            using (var context = new EMSContext())
+            {
+                var res= context.Employees
+                    .Include(e => e.Department)
+                    .Where(e => e.DepartmentId == ID)
+                    .ToList();
+                List<Employee> employees = new List<Employee>();
+                foreach (var employee in res)
+                {
+                    if (employee.IsTerminated() == false)
+                    {
+                        employees.Add(employee);
+                    }
+                }
+                return employees;
+            }
+
+
         }
         public string GetDepartmentName()
         {

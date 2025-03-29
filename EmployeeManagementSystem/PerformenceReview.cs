@@ -11,22 +11,52 @@ namespace EmployeeManagementSystem
         public static void GivePromotion(Employee employee)
         {
 
-            if (employee.IsEligible())
-            {
-                decimal newSalary = employee.GetSalary() + (employee.GetSalary()) * .15m;
-                employee.SetSalary(newSalary);
+            #region Old
+            //if (employee.IsEligible())
+            //{
+            //    decimal newSalary = employee.GetSalary() + (employee.GetSalary()) * .15m;
+            //    employee.SetSalary(newSalary);
 
-                if (employee.GetJopTitle()!=JopTitles.Principal)
-                {
-                    JopTitles newJopTitle = (JopTitles)((int)employee.GetJopTitle() + 1);
-                    employee.SetJopTitle(newJopTitle);
-                }
-                
-            }
-            else
+            //    if (employee.GetJopTitle()!=JopTitles.Principal)
+            //    {
+            //        JopTitles newJopTitle = (JopTitles)((int)employee.GetJopTitle() + 1);
+            //        employee.SetJopTitle(newJopTitle);
+            //    }
+
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Can't Give Promotion");
+            //} 
+            #endregion
+
+            using (var context = new EMSContext())
             {
-                Console.WriteLine("Can't Give Promotion");
+                var emp = context.Employees.Find(employee.GetEmployeeId());
+                if (emp != null)
+                {
+                    if (emp.IsEligible())
+                    {
+                        decimal newSalary = emp.GetSalary() + (emp.GetSalary()) * .15m;
+                        emp.SetSalary(newSalary) ;
+                        if (emp.JopTitle != JopTitles.Principal)
+                        {
+                            JopTitles newJopTitle = (JopTitles)((int)emp.JopTitle + 1);
+                            emp.JopTitle = newJopTitle;
+                        }
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Can't Give Promotion");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Employee Not Found");
+                }
             }
+
 
 
         }

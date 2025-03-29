@@ -55,16 +55,30 @@ namespace EmployeeManagementSystem
             }
             else
             {
-                Rate = rate;
+                using(var context = new EMSContext())
+                {
+                    var employee = context.Employees.Find(ID);
+                    if (employee != null)
+                    {
+                        employee.Rate = rate;
+                        context.SaveChanges();
+                    }
+                }
             }
         }
         public void TransferDepartment(Department department)
         {
             if (department != null && Terminate == false)
             {
-                Department.RemoveEmployeeFromDepartment(this);
-                DepartmentId = department.ID;
-                Department.AddEmployeeToDepartment(this);
+                using (var context = new EMSContext())
+                {
+                    var employee = context.Employees.Find(ID);
+                    if (employee != null)
+                    {
+                        employee.DepartmentId = department.ID;
+                        context.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -96,7 +110,7 @@ namespace EmployeeManagementSystem
             //use data from the database
             Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP " +
                 $"\t {Department.Name}\t\t {EmploymentDate}\t {Rate}\t    {(Rate > Rate.MeetsExpectations ?
-                "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
+                "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)} \t {Terminate}");
         }
         //public void DisplayEmployeeInfo()
         //{
@@ -136,7 +150,16 @@ namespace EmployeeManagementSystem
         }
         public void SetSalary(decimal salary)
         {
-            Salary = salary;
+            using (var context = new EMSContext())
+            {
+                var employee = context.Employees.Find(ID);
+                if (employee != null)
+                {
+                    employee.Salary = salary;
+                    context.SaveChanges();
+                }
+            }
+
         }
         public JopTitles GetJopTitle()
         {

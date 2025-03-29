@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "EmployeeID": 6,
+    "Name": "jam",
+    "Department": "DFG",
+    "Rating": "ExceedsExpectations",
+    "Salary": 5145.00
+  },
+  {
+    "EmployeeID": 2,
+    "Name": "doha",
+    "Department": "DFG",
+    "Rating": "Unacceptable",
+    "Salary": 5005.00
+  },
+  {
+    "EmployeeID": 3,
+    "Name": "sara",
+    "Department": "DFG",
+    "Rating": "Unrated",
+    "Salary": 5050.00
+  },
+  {
+    "EmployeeID": 1,
+    "Name": "Aya",
+    "Department": "DFG",
+    "Rating": "Unrated",
+    "Salary": 4041.00
+  }
+]

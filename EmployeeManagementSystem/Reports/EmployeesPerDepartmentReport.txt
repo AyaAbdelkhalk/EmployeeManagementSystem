@@ -1,67 +1,103 @@
 [
   {
-    "DepartmentName": "Marketing",
+    "DepartmentName": "Dept1",
+    "Employees": [
+      {
+        "EmployeeID": 10,
+        "Name": "ds",
+        "Age": 54,
+        "Salary": 6776.00,
+        "JobTitle": "Mid"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "Dept2",
     "Employees": []
   },
   {
-    "DepartmentName": "Finance",
+    "DepartmentName": "Dept3",
+    "Employees": [
+      {
+        "EmployeeID": 16,
+        "Name": "Final test",
+        "Age": 23,
+        "Salary": 7899.00,
+        "JobTitle": "Mid"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "DDD",
+    "Employees": [
+      {
+        "EmployeeID": 11,
+        "Name": "test",
+        "Age": 34,
+        "Salary": 7688.00,
+        "JobTitle": "Junior"
+      },
+      {
+        "EmployeeID": 14,
+        "Name": "frrgtg",
+        "Age": 43,
+        "Salary": 6789.00,
+        "JobTitle": "Mid"
+      },
+      {
+        "EmployeeID": 15,
+        "Name": "RTTTTTTTTTTTTT",
+        "Age": 44,
+        "Salary": 7879.00,
+        "JobTitle": "Mid"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "DFG",
+    "Employees": [
+      {
+        "EmployeeID": 1,
+        "Name": "Aya",
+        "Age": 10,
+        "Salary": 4041.00,
+        "JobTitle": "Fresher"
+      },
+      {
+        "EmployeeID": 2,
+        "Name": "doha",
+        "Age": 40,
+        "Salary": 5005.00,
+        "JobTitle": "Junior"
+      },
+      {
+        "EmployeeID": 3,
+        "Name": "sara",
+        "Age": 50,
+        "Salary": 5050.00,
+        "JobTitle": "Principal"
+      },
+      {
+        "EmployeeID": 6,
+        "Name": "jam",
+        "Age": 50,
+        "Salary": 5145.00,
+        "JobTitle": "Principal"
+      }
+    ]
+  },
+  {
+    "DepartmentName": "Deptttt",
     "Employees": []
   },
   {
     "DepartmentName": "HR",
     "Employees": [
       {
-        "EmployeeID": -7,
-        "Name": "Fouad Magdy",
-        "Age": 40,
-        "Salary": 10000.00,
-        "JobTitle": "Senior"
-      },
-      {
-        "EmployeeID": -6,
-        "Name": "Taha Ragab",
-        "Age": 40,
-        "Salary": 10000.00,
-        "JobTitle": "Fresher"
-      },
-      {
-        "EmployeeID": -5,
-        "Name": "Ashraf Khaled",
-        "Age": 40,
-        "Salary": 10000.00,
-        "JobTitle": "Principal"
-      },
-      {
-        "EmployeeID": -4,
-        "Name": "Momen Ahmed",
-        "Age": 40,
-        "Salary": 10000.00,
-        "JobTitle": "Senior"
-      },
-      {
-        "EmployeeID": -2,
-        "Name": "Ali Saad",
-        "Age": 30,
-        "Salary": 7000.00,
-        "JobTitle": "Mid"
-      }
-    ]
-  },
-  {
-    "DepartmentName": "IT",
-    "Employees": [
-      {
-        "EmployeeID": -3,
-        "Name": "Omar Abdelbaset",
-        "Age": 35,
-        "Salary": 9000.00,
-        "JobTitle": "Junior"
-      },
-      {
-        "EmployeeID": -1,
-        "Name": "Ahmed Fahmy",
-        "Age": 25,
-        "Salary": 5000.00,
+        "EmployeeID": 17,
+        "Name": "fvfxvdf",
+        "Age": 55,
+        "Salary": 78797.00,
         "JobTitle": "Mid"
       }
     ]
