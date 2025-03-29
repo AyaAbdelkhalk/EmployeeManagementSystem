@@ -138,6 +138,9 @@ namespace EmployeeManagementSystem
             return JopTitle ;
         }
         public void SetJobTitle(JopTitles jopTitle)
+        {
+            JopTitle = jopTitle;
+        }
         public int GetAge()
         {
             return Age;
