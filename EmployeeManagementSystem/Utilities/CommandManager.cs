@@ -63,6 +63,7 @@ namespace EmployeeManagementSystem.Utilities
         public static void AddEmployee(Company company)
         {
             bool isValid = false;
+            using var _context = new EMSContext();
             do
             {
                 AnsiConsole.MarkupLine("[bold]Creating a New Employee...[/]");
@@ -107,21 +108,18 @@ namespace EmployeeManagementSystem.Utilities
                 isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle, departmentName, out Employee employee);
                 if (isValid)
                 {
-                    using (var _context = new EMSContext())
+
+                    var department = company.GetDepartment(departmentName);
+                    if (department == null)
                     {
-                        var department = _context.Departments.FirstOrDefault(d => d.Name == departmentName);
-                        if (department == null)
-                        {
-                            ConsoleExtension.WriteError("Department not found.");
-                            return;
-                        }
-
-                        employee.DepartmentId = department.ID;
-                        employee.Department = department;
-
-                        _context.Employees.Add(employee);
-                        _context.SaveChanges();
+                        ConsoleExtension.WriteError("Department not found.");
+                        return;
                     }
+
+                    employee.DepartmentId = department.ID;
+                    _context.Employees.Add(employee);
+                    _context.SaveChanges();
+
                     ConsoleExtension.WriteSuccess("\nEmployee Added Successfully");
                     Console.WriteLine("Press any key to return to the Main menu...");
                     Console.ReadKey();
@@ -194,13 +192,11 @@ namespace EmployeeManagementSystem.Utilities
 
 
             Employee employee = context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
-
             if (!employee.IsEligible())
             {
                 ConsoleExtension.WriteError("\nEmployee is Not Eligible for Promotion");
                 return;
             }
-
 
             var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
             empBefore.AddColumn(employee.GetEmployeeId().ToString());
@@ -223,13 +219,9 @@ namespace EmployeeManagementSystem.Utilities
             empAfter.Columns[1].Width = empAfter.Columns[2].Width = empAfter.Columns[3].Width = 10;
             AnsiConsole.Write(empAfter);
 
-
             ConsoleExtension.WriteSuccess("\nEmployee Promoted Successfully");
 
-
-
         }
-        
 
         public static void AddDepartment(Company company)
         {
@@ -266,29 +258,6 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void DisplayDepartments(Company company)
         {
-            #region Old 
-            //AnsiConsole.Status().Start("Displaying All Departments....", ctx =>
-            //{
-            //    Thread.Sleep(1000);
-            //});
-
-            //AnsiConsole.Write(new Text("Departments List \n ").Centered());
-
-            //var table = new Table().Centered().Border(TableBorder.Double);
-            //table.AddColumn("Department Name");
-            //table.AddColumn("Department Head");
-
-            //AnsiConsole.Live(table).Start(ctx =>
-            //{
-            //    foreach (Department department in company.GetDepartmentList())
-            //    {
-            //        table.AddRow(department.GetDepartmentName(), department.GetDepartmentHeadName());
-            //        ctx.Refresh();
-            //        Thread.Sleep(200);
-            //    }
-            //}); 
-            #endregion
-
             using (var _context = new EMSContext())
             {
                 AnsiConsole.Status().Start("Retrieving Departments from Database...", ctx =>
@@ -351,9 +320,7 @@ namespace EmployeeManagementSystem.Utilities
         {
             company.SaveEmployeesPerDepartmentReport();
         }
-
         #endregion
-
 
         internal static void RateEmployee()
         {
