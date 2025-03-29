@@ -10,19 +10,19 @@ namespace EmployeeManagementSystem
             Validator.Company = company;
             CommandManager.company = company;
 
-            Department ITDepartement = new Department("IT");
-            company.AddDepartment(ITDepartement);
-            Department HRDepartement = new Department("HR");
-            company.AddDepartment(HRDepartement);
-            Employee employee1 = new Employee("Ahmed", 25, 5000, JopTitles.Mid, ITDepartement);
+            //Department ITDepartement = new Department("IT");
+            //company.AddDepartment(ITDepartement);
+            //Department HRDepartement = new Department("HR");
+            //company.AddDepartment(HRDepartement);
+            //Employee employee1 = new Employee("Ahmed", 25, 5000, JopTitles.Mid, ITDepartement);
 
 
-            Employee employee2 = new Employee("Ali", 30, 7000, JopTitles.Mid, HRDepartement);
-            Employee employee3 = new Employee("Omar", 35, 9000, JopTitles.Junior, ITDepartement);
-            Employee employee4 = new Employee("Mohamed Anwar", 40, 10000, JopTitles.Senior, HRDepartement);
-            ITDepartement.setDepartmentHead(employee3);
-            HRDepartement.setDepartmentHead(employee4);
-            List<Employee> employees = ITDepartement.DisplayDepartmentEmployees();
+            //Employee employee2 = new Employee("Ali", 30, 7000, JopTitles.Mid, HRDepartement);
+            //Employee employee3 = new Employee("Omar", 35, 9000, JopTitles.Junior, ITDepartement);
+            //Employee employee4 = new Employee("Mohamed Anwar", 40, 10000, JopTitles.Senior, HRDepartement);
+            //ITDepartement.setDepartmentHead(employee3);
+            //HRDepartement.setDepartmentHead(employee4);
+            //List<Employee> employees = ITDepartement.DisplayDepartmentEmployees();
 
 
             while (true)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +10,19 @@ namespace EmployeeManagementSystem
 {
     class Department
     {
-        private string Name;
-        private Employee? DepartmentHead;
-        public List<Employee> Employees = new List<Employee>();
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public int ID { get; set; }
+        public string Name { get; set; }
 
+        [ForeignKey("DepartmentHead")]
+        public int? DepartmentHeadId { get; set; }
+        public virtual Employee? DepartmentHead { get; set; }
+        public List<Employee> Employees { get; set; } = new List<Employee>();
+
+        public Department()
+        {
+        }
         public Department(string name, Employee employee)
         {
             Name = name;
@@ -26,6 +37,7 @@ namespace EmployeeManagementSystem
         public void setDepartmentHead(Employee employee)
         {
             DepartmentHead = employee;
+            DepartmentHeadId = employee.ID;
         }
 
 
@@ -41,15 +53,18 @@ namespace EmployeeManagementSystem
 
         public List<Employee> DisplayDepartmentEmployees()
         {
-            List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Employees)
-            {
-                if (employee.IsTerminated() == false)
-                {
-                    employees.Add(employee);
-                }
-            }
-            return employees;
+            //List<Employee> employees = new List<Employee>();
+            //foreach (Employee employee in Employees)
+            //{
+            //    if (employee.IsTerminated() == false)
+            //    {
+            //        employees.Add(employee);
+            //    }
+            //}
+            //return employees;
+            return Employees
+                .FindAll(e => e.IsTerminated() == false)
+                .ToList();
         }
         public string GetDepartmentName()
         {

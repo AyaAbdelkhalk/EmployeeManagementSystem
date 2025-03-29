@@ -13,7 +13,7 @@ namespace EmployeeManagementSystem
             decimal newSalary = employee.GetSalary()+(employee.GetSalary()) * .15m;
             employee.SetSalary(newSalary);
             JopTitles newJopTitle= (JopTitles)((int)employee.GetJopTitle()+1);
-            employee.SetJopTitle(newJopTitle);
+            employee.SetJobTitle(newJopTitle);
 
         }
     }

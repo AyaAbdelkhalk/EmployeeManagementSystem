@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,25 +11,31 @@ namespace EmployeeManagementSystem
 {
     class Employee
     {
-        private static int EmployeeCounter = 1;
-        private int ID;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
         private string Name;
         private int Age;
         private decimal Salary;
-        private Department Department;
         private DateOnly EmploymentDate;
-        private Rate Rate;
+        public Rate Rate { get; set; }
         private bool Terminate;
-        private JopTitles JopTitle;
+        public JopTitles JopTitle { get; set; }
 
+        [ForeignKey("Department")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+
+        public Employee()
+        {
+        }
         public Employee(string name, int age, decimal salary, JopTitles jopTitles, Department department)
         {
-            ID = EmployeeCounter++;
             Name = name;
             Age = age;
             Salary = salary;
+            DepartmentId = department.ID;
             Department = department;
-            Department.AddEmployeeToDepartment(this);
             Terminate = false;
             Rate = Rate.Unrated;
             JopTitle = jopTitles;
@@ -60,10 +69,7 @@ namespace EmployeeManagementSystem
         }
         public void TerminateEmployee()
         {
-            if (Terminate == false)
-            {
-                Terminate = true;
-            }
+            Terminate = true;
         }
         public bool IsTerminated()
         {
@@ -71,33 +77,28 @@ namespace EmployeeManagementSystem
         }
         public List<Employee> DisplayCurrentEmployees()
         {
-            List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Department.Employees)
-            {
-                if (employee.IsTerminated() == false)
-                {
-                    employees.Add(employee);
-                }
-            }
-            return employees;
+            return Department.Employees
+                .FindAll(e => e.IsTerminated() == false)
+                .ToList();
+
         }
         public List<Employee> DisplayPastEmployees()
         {
-            List<Employee> employees = new List<Employee>();
-            foreach (Employee employee in Department.Employees)
-            {
-                if (employee.IsTerminated() == true)
-                {
-                    employees.Add(employee);
-                }
-            }
-            return employees;
+            return Department.Employees
+                .FindAll(e => e.IsTerminated() == true)
+                .ToList();
         }
 
         public void DisplayEmployeeInfo()
         {
-            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP \t {Department.GetDepartmentName()}\t\t {EmploymentDate}\t {Rate}\t {(Rate > Rate.MeetsExpectations ? "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
+
+            //use data from the database
+            Console.WriteLine($"{ID}\t {Name.PadRight(15)}\t {Age}\t {Salary} EGP " +
+                $"\t {Department.Name}\t\t {EmploymentDate}\t {Rate}\t    {(Rate > Rate.MeetsExpectations ?
+                "Eligible" : "Not Eligible")} \t {JopTitle.ToString().PadRight(12)}");
         }
+
+
 
 
         public string GetEmployeeName()
@@ -126,7 +127,7 @@ namespace EmployeeManagementSystem
         {
             return JopTitle ;
         }
-        public void SetJopTitle(JopTitles jopTitle)
+        public void SetJobTitle(JopTitles jopTitle)
         {
             JopTitle=jopTitle;
         }
