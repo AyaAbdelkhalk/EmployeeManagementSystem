@@ -171,7 +171,7 @@ namespace EmployeeManagementSystem.Utilities
                             employee.GetJopTitle().ToString());
 
                         ctx.Refresh();
-                        Thread.Sleep(200);
+                        Thread.Sleep(150);
                     }
 
                 });
@@ -353,10 +353,28 @@ namespace EmployeeManagementSystem.Utilities
             AnsiConsole.MarkupLine("Choose Employee [green]Performance[/]");
             Console.WriteLine(rateSelection);
 
+            Employee employee = context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
 
-            Employee emp = context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
-            emp.SetRate((Rate)RateDictionary[rateSelection]);
+            var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empBefore.AddColumn(employee.GetEmployeeId().ToString());
+            empBefore.AddColumn(employee.GetEmployeeName());
+            empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetRate().ToString()}[/]")));
+            empBefore.Columns[0].Width = 5;
+            empBefore.Columns[1].Width = empBefore.Columns[2].Width = 15;
+            AnsiConsole.Write(empBefore);
+
+            employee.SetRate((Rate)RateDictionary[rateSelection]);
             context.SaveChanges();
+            AnsiConsole.Write(new Text("↓").Centered());
+
+            var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empAfter.AddColumn(employee.GetEmployeeId().ToString());
+            empAfter.AddColumn(employee.GetEmployeeName());
+            empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetRate().ToString()}[/]")));
+            empAfter.Columns[0].Width = 5;
+            empAfter.Columns[1].Width = empBefore.Columns[2].Width = 15;
+            AnsiConsole.Write(empAfter);
+
         }
 
         internal static void TransferDepartment()
@@ -383,9 +401,26 @@ namespace EmployeeManagementSystem.Utilities
             AnsiConsole.MarkupLine("Choose [green]DepartmentName[/]");
             Console.WriteLine(departmentSelection);
 
+            var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empBefore.AddColumn(employee.GetEmployeeId().ToString());
+            empBefore.AddColumn(employee.GetEmployeeName());
+            empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.Department.Name}[/]")));
+            empBefore.Columns[0].Width = 5;
+            empBefore.Columns[1].Width = empBefore.Columns[2].Width = 15;
+            AnsiConsole.Write(empBefore);
+
             Department department = context.Departments.FirstOrDefault(x => x.Name == departmentSelection)!;
             employee.TransferDepartment(department);
             context.SaveChanges();
+            AnsiConsole.Write(new Text("↓").Centered());
+
+            var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empAfter.AddColumn(employee.GetEmployeeId().ToString());
+            empAfter.AddColumn(employee.GetEmployeeName());
+            empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.Department.Name}[/]")));
+            empAfter.Columns[0].Width = 5;
+            empAfter.Columns[1].Width = empBefore.Columns[2].Width = 15;
+            AnsiConsole.Write(empAfter);
         }
     }
 }
