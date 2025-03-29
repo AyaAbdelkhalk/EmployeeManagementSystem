@@ -16,19 +16,22 @@ namespace EmployeeManagementSystem
                 decimal newSalary = employee.GetSalary() + (employee.GetSalary()) * .15m;
                 employee.SetSalary(newSalary);
 
-                if (employee.GetJopTitle()!=JopTitles.Principal)
+                if (employee.GetJopTitle() != JopTitles.Principal)
                 {
                     JopTitles newJopTitle = (JopTitles)((int)employee.GetJopTitle() + 1);
                     employee.SetJopTitle(newJopTitle);
                 }
                 
+                using(EMSContext context = new EMSContext())
+                {
+                    context.Employees.Update(employee);
+                    context.SaveChanges();
+                }
             }
             else
             {
                 Console.WriteLine("Can't Give Promotion");
             }
-
-
         }
     }
 }

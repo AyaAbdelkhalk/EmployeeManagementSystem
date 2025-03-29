@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -125,6 +126,34 @@ namespace EmployeeManagementSystem.Utilities
                 employee = new Employee(name, ageInt, salaryDecimal,(JopTitles)jobTitleInt, department!);
                 return true;
             }
+        }
+
+
+        public static bool ValidateEmployeeId(string empId)
+        {
+            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+                return false;
+            }
+
+            using (var context = new EMSContext())
+            {
+                Employee? employee = context.Employees.Include(x => x.Department).FirstOrDefault(x => x.ID == idInt);
+                if (employee is null)
+                {
+                    ConsoleExtension.WriteError("\nEmployee Not Found");
+                    return false;
+                }
+
+                if (employee.IsTerminated())
+                {
+                    ConsoleExtension.WriteError("\nEmployee is Terminated");
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

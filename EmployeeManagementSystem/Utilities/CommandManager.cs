@@ -30,7 +30,7 @@ namespace EmployeeManagementSystem.Utilities
                 new SelectionPrompt<string>()
                 .Title("Use Arrow Keys to Select an [green]option[/]:")
                 .MoreChoicesText("[grey]Move up and down to reveal more options[/]")
-                .AddChoices(new[] { "Add an Employee", "Display All Employees", "Promote an Employee", "Rate an Employee" ,"Transfer Departement", "Add a Department", "Display All Departments", "Generate Reports", "Exit" })
+                .AddChoices(new[] { "Add an Employee", "Display All Employees", "Promote an Employee", "Rate an Employee", "Transfer Departement", "Add a Department", "Display All Departments", "Generate Reports", "Exit" })
             );
 
             return selection;
@@ -45,7 +45,7 @@ namespace EmployeeManagementSystem.Utilities
             {
                 { "Display Employees Per Department" , "1" },
                 { "Display Top Performers" , "2" },
-                { "Display Salary Distribution" , "3" },       
+                { "Display Salary Distribution" , "3" },
                 { "Save Employees Per Department Report" , "4" },
                 { "Save Salary Distribution Report" , "5" },
                 { "Save Top Performers Report" , "6" },
@@ -107,7 +107,7 @@ namespace EmployeeManagementSystem.Utilities
                 isValid = Validator.ValidateEmployee(userName, age, salary, jobTitle, departmentName, out Employee employee);
                 if (isValid)
                 {
-                    using (var _context = new EMSContext())  
+                    using (var _context = new EMSContext())
                     {
                         var department = _context.Departments.FirstOrDefault(d => d.Name == departmentName);
                         if (department == null)
@@ -135,6 +135,9 @@ namespace EmployeeManagementSystem.Utilities
 
         public static void DisplayEmployees(Company company)
         {
+            using var _context = new EMSContext();
+            var employees = _context.Employees.Include(x => x.Department);
+
             AnsiConsole.Status().Start("Displaying All Employees....", ctx =>
             {
                 Thread.Sleep(1000);
@@ -153,93 +156,80 @@ namespace EmployeeManagementSystem.Utilities
             table.AddColumns("Eligible");
             table.AddColumn("Job Title");
 
-
             AnsiConsole.Live(table)
                 .Start(ctx =>
                 {
-                    foreach (Department department in company.GetDepartmentList())
+                    foreach (Employee employee in employees)
                     {
-                        foreach (Employee employee in department.DisplayDepartmentEmployees())
-                        {
-                            table.AddRow(
-                                employee.GetEmployeeId().ToString(),
-                                employee.GetEmployeeName(),
-                                employee.GetAge().ToString(),
-                                employee.GetSalary().ToString("N0"),
-                                department.GetDepartmentName(),
-                                employee.GetEmployementDate().ToString(),
-                                employee.GetEmployeeRate().ToString(),
-                                employee.IsEligible().ToString(),
-                                employee.GetJopTitle().ToString());
+                        table.AddRow(
+                            employee.GetEmployeeId().ToString(),
+                            employee.GetEmployeeName(),
+                            employee.GetAge().ToString(),
+                            employee.GetSalary().ToString("N0"),
+                            employee.Department.GetDepartmentName(),
+                            employee.GetEmployementDate().ToString(),
+                            employee.GetEmployeeRate().ToString(),
+                            employee.IsEligible().ToString(),
+                            employee.GetJopTitle().ToString());
 
-                            ctx.Refresh();
-                            Thread.Sleep(200);
-
-                        }
+                        ctx.Refresh();
+                        Thread.Sleep(200);
                     }
 
                 });
-
         }
 
         public static void PromoteEmployee()
         {
             AnsiConsole.MarkupLine("[bold]Promoting an Employee...[/]");
+            using var context = new EMSContext();
 
-            AnsiConsole.MarkupLine("\nEnter Employee [green]ID[/]");
-            string id = Console.ReadLine()!;
-
-            if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int idInt))
+            string empId;
+            do
             {
-                ConsoleExtension.WriteError("Invalid ID");
+                AnsiConsole.MarkupLine("\nEnter Employee [green]ID[/]");
+                empId = Console.ReadLine()!;
             }
-            else
+            while (!Validator.ValidateEmployeeId(empId));
+
+
+            Employee employee = context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
+
+            if (!employee.IsEligible())
             {
-                Employee? employee = company.GetDepartmentList()
-                    .SelectMany(x => x.Employees)
-                    .FirstOrDefault(x => x.GetEmployeeId() == idInt);
-
-                if (employee is null)
-                {
-                    ConsoleExtension.WriteError("\nEmployee Not Found");
-                }
-                else
-                {
-                    if (!employee.IsEligible())
-                    {
-                        ConsoleExtension.WriteError("\nEmployee is Not Eligible for Promotion");
-                        return;
-                    }
-
-
-                    var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
-                    empBefore.AddColumn(employee.GetEmployeeId().ToString());
-                    empBefore.AddColumn(employee.GetEmployeeName());
-                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetSalary().ToString("N0")}[/]")));
-                    empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetJopTitle().ToString()}[/]")));
-                    empBefore.Columns[0].Width = 5;
-                    empBefore.Columns[1].Width = empBefore.Columns[2].Width = empBefore.Columns[3].Width = 10;
-                    AnsiConsole.Write(empBefore);
-
-                    PerformenceReview.GivePromotion(employee);
-                    AnsiConsole.Write(new Text("↓").Centered());
-
-                    var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
-                    empAfter.AddColumn(employee.GetEmployeeId().ToString());
-                    empAfter.AddColumn(employee.GetEmployeeName());
-                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetSalary().ToString("N0")}[/]")));
-                    empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetJopTitle().ToString()}[/]")));
-                    empAfter.Columns[0].Width = 5;
-                    empAfter.Columns[1].Width = empAfter.Columns[2].Width = empAfter.Columns[3].Width = 10;
-                    AnsiConsole.Write(empAfter);
-
-
-                    ConsoleExtension.WriteSuccess("\nEmployee Promoted Successfully");
-
-                }
-
+                ConsoleExtension.WriteError("\nEmployee is Not Eligible for Promotion");
+                return;
             }
+
+
+            var empBefore = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empBefore.AddColumn(employee.GetEmployeeId().ToString());
+            empBefore.AddColumn(employee.GetEmployeeName());
+            empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetSalary().ToString("N0")}[/]")));
+            empBefore.AddColumn(new TableColumn(new Markup($"[red]{employee.GetJopTitle().ToString()}[/]")));
+            empBefore.Columns[0].Width = 5;
+            empBefore.Columns[1].Width = empBefore.Columns[2].Width = empBefore.Columns[3].Width = 10;
+            AnsiConsole.Write(empBefore);
+
+            PerformenceReview.GivePromotion(employee);
+            AnsiConsole.Write(new Text("↓").Centered());
+
+            var empAfter = new Table().Centered().Border(TableBorder.Double).Width(55);
+            empAfter.AddColumn(employee.GetEmployeeId().ToString());
+            empAfter.AddColumn(employee.GetEmployeeName());
+            empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetSalary().ToString("N0")}[/]")));
+            empAfter.AddColumn(new TableColumn(new Markup($"[green]{employee.GetJopTitle().ToString()}[/]")));
+            empAfter.Columns[0].Width = 5;
+            empAfter.Columns[1].Width = empAfter.Columns[2].Width = empAfter.Columns[3].Width = 10;
+            AnsiConsole.Write(empAfter);
+
+
+            ConsoleExtension.WriteSuccess("\nEmployee Promoted Successfully");
+
+
+
         }
+        
 
         public static void AddDepartment(Company company)
         {
@@ -348,7 +338,6 @@ namespace EmployeeManagementSystem.Utilities
             company.GenerateEmployeesPerDepartmentReport();
         }
 
-
         #region Files
         public static void SaveSalaryDistributionReport()
         {
@@ -363,37 +352,21 @@ namespace EmployeeManagementSystem.Utilities
             company.SaveEmployeesPerDepartmentReport();
         }
 
-
         #endregion
 
 
         internal static void RateEmployee()
         {
             AnsiConsole.MarkupLine("[bold]Rating an Employee...[/]");
+            using var context = new EMSContext();
+            string empId;
+            do
+            {
+                AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
+                empId = Console.ReadLine()!;
+            }
+            while (!Validator.ValidateEmployeeId(empId));
 
-            AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
-            string empId = Console.ReadLine()!;
-
-            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
-            {
-                ConsoleExtension.WriteError("Invalid ID");
-                return;
-            }
-            
-            Employee? employee = _context.Employees.FirstOrDefault(x => x.ID == idInt);
-            if (employee is null)
-            {
-                ConsoleExtension.WriteError("\nEmployee Not Found");
-                return;
-            }
-           
-            if (employee.IsTerminated())
-            {
-                ConsoleExtension.WriteError("\nEmployee is Terminated");
-                return;
-            }
-                
-            
 
             var RateDictionary = new Dictionary<string, int>
                 {
@@ -414,39 +387,27 @@ namespace EmployeeManagementSystem.Utilities
             Console.WriteLine(rateSelection);
 
 
-            Employee emp = _context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
+            Employee emp = context.Employees.FirstOrDefault(x => x.ID == int.Parse(empId))!;
             emp.SetRate((Rate)RateDictionary[rateSelection]);
-            _context.SaveChanges();
-
+            context.SaveChanges();
         }
 
         internal static void TransferDepartment()
         {
             AnsiConsole.MarkupLine("[bold]Transfer Departement ...[/]");
+            using var context = new EMSContext();
 
-            AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
-            string empId = Console.ReadLine()!;
-
-            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
+            string empId;
+            do
             {
-                ConsoleExtension.WriteError("Invalid ID");
-                return;
+                AnsiConsole.MarkupLine("\nEnter Employee [green]Id[/]");
+                empId = Console.ReadLine()!;
             }
+            while (!Validator.ValidateEmployeeId(empId));
 
-            Employee? employee = _context.Employees.Include(x => x.Department).FirstOrDefault(x => x.ID == idInt);
-            if (employee is null)
-            {
-                ConsoleExtension.WriteError("\nEmployee Not Found");
-                return;
-            }
 
-            if (employee.IsTerminated())
-            {
-                ConsoleExtension.WriteError("\nEmployee is Terminated");
-                return;
-            }
-
-            var DepartmentList = _context.Departments.Where(x => x.ID != employee.DepartmentId).Select(x => x.GetDepartmentName());
+            Employee employee = context.Employees.Include(x => x.Department).FirstOrDefault(x => x.ID == int.Parse(empId))!;
+            var DepartmentList = context.Departments.Where(x => x.ID != employee.DepartmentId).Select(x => x.GetDepartmentName());
             string departmentSelection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Choose [green]DepartmentName[/]")
@@ -455,9 +416,9 @@ namespace EmployeeManagementSystem.Utilities
             AnsiConsole.MarkupLine("Choose [green]DepartmentName[/]");
             Console.WriteLine(departmentSelection);
 
-            Department department = _context.Departments.FirstOrDefault(x => x.Name == departmentSelection)!;
+            Department department = context.Departments.FirstOrDefault(x => x.Name == departmentSelection)!;
             employee.TransferDepartment(department);
-            _context.SaveChanges();
+            context.SaveChanges();
         }
     }
 }
