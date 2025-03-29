@@ -34,8 +34,7 @@ namespace EmployeeManagementSystem
             Name = name;
             Age = age;
             Salary = salary;
-            DepartmentId = department.ID;
-            
+            DepartmentId = department.ID;   
             Terminate = false;
             Rate = Rate.Unrated;
             JopTitle = jopTitles;

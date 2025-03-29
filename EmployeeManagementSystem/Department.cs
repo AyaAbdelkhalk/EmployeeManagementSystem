@@ -29,7 +29,7 @@ namespace EmployeeManagementSystem
         public Department(string name, Employee employee)
         {
             Name = name;
-            DepartmentHead = employee;
+            DepartmentHeadId = employee.ID;
         }
         public Department(string name)
         {

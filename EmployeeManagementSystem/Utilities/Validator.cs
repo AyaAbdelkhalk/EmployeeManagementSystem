@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,13 @@ namespace EmployeeManagementSystem.Utilities
 
         public static bool ValidateDepartment(string name, string HeadId, out Employee employee)
         {
+            using var context = new EMSContext();
             List<string> errors = new List<string>();
 
             if (string.IsNullOrEmpty(name))
                 errors.Add("Department Name is Required");
 
-            if(Company.GetDepartmentList().Any(x => x.GetDepartmentName().ToLower() == name.ToLower()))
+            if(context.Departments.Any(x => x.Name.ToLower() == name.ToLower()))
             {
                 errors.Add("Department with this name already exists");
             }
@@ -28,11 +30,7 @@ namespace EmployeeManagementSystem.Utilities
             }
             else
             {
-                Employee? employeeExists = Company
-                  .GetDepartmentList()
-                  .Select(x => x.DisplayDepartmentEmployees())
-                  .SelectMany(x => x)
-                  .FirstOrDefault(x => x.GetEmployeeId() == Id);
+                Employee? employeeExists = context.Employees.FirstOrDefault(x => x.ID == Id);
 
                 if (employeeExists is null && !string.IsNullOrEmpty(HeadId))
                 {
@@ -49,18 +47,9 @@ namespace EmployeeManagementSystem.Utilities
             else
             {
                 if (string.IsNullOrEmpty(HeadId))
-                {
-                    
                     employee = null!;
-                }
                 else
-                {
-                    employee = Company
-                  .GetDepartmentList()
-                  .Select(x => x.DisplayDepartmentEmployees())
-                  .SelectMany(x => x)
-                  .FirstOrDefault(x => x.GetEmployeeId() == Id)!;
-                }
+                    employee = context.Employees.FirstOrDefault(x => x.ID == Id)!;
                 
                 return true;
             }
@@ -125,6 +114,33 @@ namespace EmployeeManagementSystem.Utilities
                 employee = new Employee(name, ageInt, salaryDecimal,(JopTitles)jobTitleInt, department!);
                 return true;
             }
+        }
+
+        public static bool ValidateEmployeeId(string empId)
+        {
+            if (string.IsNullOrEmpty(empId) || !int.TryParse(empId, out int idInt))
+            {
+                ConsoleExtension.WriteError("Invalid ID");
+                return false;
+            }
+
+            using (var context = new EMSContext())
+            {
+                Employee? employee = context.Employees.Include(x => x.Department).FirstOrDefault(x => x.ID == idInt);
+                if (employee is null)
+                {
+                    ConsoleExtension.WriteError("\nEmployee Not Found");
+                    return false;
+                }
+
+                if (employee.IsTerminated())
+                {
+                    ConsoleExtension.WriteError("\nEmployee is Terminated");
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
